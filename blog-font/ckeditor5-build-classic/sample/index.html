@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>CKEditor 5 – classic editor build – development sample</title>
+	<style>
+		body {
+			max-width: 800px;
+			margin: 20px auto;
+		}
+	</style>
+</head>
+<body>
+
+<h1>CKEditor 5 – classic editor build – development sample</h1>
+
+<div id="editor">
+	<h2>Sample</h2>
+
+	<p>This is an instance of the <a href="https://ckeditor.com/docs/ckeditor5/latest/builds/guides/overview.html#classic-editor">classic editor build</a>.</p>
+
+	<figure class="image">
+		<img src="../tests/manual/sample.jpg" alt="Autumn fields" />
+	</figure>
+
+	<p>You can use this sample to validate whether your <a href="https://ckeditor.com/docs/ckeditor5/latest/builds/guides/development/custom-builds.html">custom build</a> works fine.</p>
+</div>
+
+<script src="../build/ckeditor.js"></script>
+<script>
+	const fontColorConfig = {
+	colors: [
+		{
+			color: 'hsl(0, 0%, 0%)',
+			label: 'Black'
+		},
+		{
+			color: 'hsl(0, 0%, 30%)',
+			label: 'Dim grey'
+		},
+		{
+			color: 'hsl(0, 0%, 60%)',
+			label: 'Grey'
+		},
+		{
+			color: 'hsl(0, 0%, 90%)',
+			label: 'Light grey'
+		},
+		{
+			color: 'hsl(0, 0%, 100%)',
+			label: 'White',
+			hasBorder: true
+		},
+		{
+			color: 'hsl(0, 75%, 60%)',
+			label: 'Red'
+		},
+		{
+			color: 'hsl(30, 75%, 60%)',
+			label: 'Orange'
+		},
+		{
+			color: 'hsl(60, 75%, 60%)',
+			label: 'Yellow'
+		},
+		{
+			color: 'hsl(90, 75%, 60%)',
+			label: 'Light green'
+		},
+		{
+			color: 'hsl(120, 75%, 60%)',
+			label: 'Green'
+		},
+		{
+			color: 'hsl(150, 75%, 60%)',
+			label: 'Aquamarine'
+		},
+		{
+			color: 'hsl(180, 75%, 60%)',
+			label: 'Turquoise'
+		},
+		{
+			color: 'hsl(210, 75%, 60%)',
+			label: 'Light blue'
+		},
+		{
+			color: 'hsl(240, 75%, 60%)',
+			label: 'Blue'
+		},
+		{
+			color: 'hsl(270, 75%, 60%)',
+			label: 'Purple'
+		}
+	]
+};
+const fontBackgroundColorConfig = {
+	colors: [
+		{
+			color: 'hsl(0, 0%, 0%)',
+			label: 'Black'
+		},
+		{
+			color: 'hsl(0, 0%, 30%)',
+			label: 'Dim grey'
+		},
+		{
+			color: 'hsl(0, 0%, 60%)',
+			label: 'Grey'
+		},
+		{
+			color: 'hsl(0, 0%, 90%)',
+			label: 'Light grey'
+		},
+		{
+			color: 'hsl(0, 0%, 100%)',
+			label: 'White',
+			hasBorder: true
+		},
+		{
+			color: 'hsl(0, 75%, 60%)',
+			label: 'Red'
+		},
+		{
+			color: 'hsl(30, 75%, 60%)',
+			label: 'Orange'
+		},
+		{
+			color: 'hsl(60, 75%, 60%)',
+			label: 'Yellow'
+		},
+		{
+			color: 'hsl(90, 75%, 60%)',
+			label: 'Light green'
+		},
+		{
+			color: 'hsl(120, 75%, 60%)',
+			label: 'Green'
+		},
+		{
+			color: 'hsl(150, 75%, 60%)',
+			label: 'Aquamarine'
+		},
+		{
+			color: 'hsl(180, 75%, 60%)',
+			label: 'Turquoise'
+		},
+		{
+			color: 'hsl(210, 75%, 60%)',
+			label: 'Light blue'
+		},
+		{
+			color: 'hsl(240, 75%, 60%)',
+			label: 'Blue'
+		},
+		{
+			color: 'hsl(270, 75%, 60%)',
+			label: 'Purple'
+		}
+	]
+};
+	
+
+ClassicEditor.create( document.querySelector( '#editor' ),{fontColorConfig,fontBackgroundColorConfig
+
+	} )
+		.then( editor => {
+			window.editor = editor;
+		} )
+		.catch( error => {
+			console.error( 'There was a problem initializing the editor.', error );
+		} );
+</script>
+
+</body>
+</html>
