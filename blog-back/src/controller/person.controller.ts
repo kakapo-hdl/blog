@@ -11,7 +11,6 @@ import { PersonService } from 'src/service/person.sercvice';
 @Controller('person')
 export class PersonController {
   constructor(
-    // @Inject(forwardRef(() => PersonService))
     private readonly personService: PersonService,
   ) {}
 

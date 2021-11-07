@@ -1,6 +1,3 @@
-<<<<<<< HEAD:blog-font/src/react-app-env.d.ts
-/// <reference types="react-scripts" />
-=======
 /// <reference types="node" />
 /// <reference types="react" />
 /// <reference types="react-dom" />
@@ -72,4 +69,3 @@ declare module '*.module.sass' {
   const classes: { readonly [key: string]: string };
   export default classes;
 }
->>>>>>> d6f3c2aa59b179e06c25eff6c3a8c9d9bb70af11:blog-font-end/src/react-app-env.d.ts

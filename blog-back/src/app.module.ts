@@ -1,16 +1,31 @@
+
 import { Module } from '@nestjs/common';
-import { ProductsController } from './controller/products.controller';
-import { ProductsService } from './service/product.sercvice';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PersonController } from './controller/person.controller';
-import { PersonService } from './service/person.sercvice';
 import { PeronMudule } from './person.module';
 import { database } from './config/db';
+import { ArticleMudule } from './article.module';
+import { Person } from './model/person.model';
+import { Article } from './model/article.model';
 @Module({
   // eslint-disable-next-line prettier/prettier
   imports: [
-    TypeOrmModule.forRoot(database),
-    PeronMudule
+    TypeOrmModule.forRoot({
+      type: 'mssql',
+      host: '42.192.144.217',
+      // port: 1433,
+      username: 'SA',
+      password: 'nM7894561230',
+      database: 'blog',
+      entities: [Article,Person],
+
+      // entities: ['src/**.entity{.ts,.js}'],
+      synchronize: true,
+      autoLoadEntities: true,
+      extra: {
+        trustServerCertificate: true,
+      },
+    }),
+   ArticleMudule, PeronMudule
   ],
   // controllers: [PersonController, AppController, ProductsController],
   // providers: [PersonService, AppService, ProductsService],

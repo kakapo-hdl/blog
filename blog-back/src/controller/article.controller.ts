@@ -12,7 +12,7 @@ import {
 import { Article } from 'src/model/article.model';
 import { ArticleService } from 'src/service/Article.sercvice';
 
-@Controller('Article')
+@Controller('article')
 export class ArticleController {
   constructor(
     // @Inject(forwardRef(() => ArticleService))
