@@ -1,10 +1,7 @@
 // import { Footer } from "antd/lib/layout/layout";
 import React from "react";
-import { Header, HeadConetnt } from "../components/Header/HeaderStyles"
 import { Box, Container, Grid } from "@material-ui/core";
-import Carousel from "../components/Crousel/Crousel";
-import ListArticle from "../components/ListArticle/ListArticle";
-import WriteArticle from "../components/WritArticle/ListArticle";
+import WriteArticle from "../components/WritArticle/WriteArticle";
 
 
 
@@ -22,7 +19,6 @@ const WriteArticlePage: React.FC<(WriteArticlePageProps)> = (props) => {
           <Grid item xs={12} md={12}>
             <WriteArticle ></WriteArticle>
           </Grid>
-
         </Grid>
       </Container>
     </>

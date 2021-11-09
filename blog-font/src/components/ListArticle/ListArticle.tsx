@@ -1,73 +1,53 @@
 import { CardActionArea, CardContent, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getArticle } from "../../api/service";
+import { Article } from "../../models/model";
 import { ListCard } from "./ComponentStyle";
+import { useHistory } from 'react-router-dom'
 export interface Props {
   // name?: String;
   // enthusiasmLevel: number;
   // onIncrement?: () => void;
   // onDecrement?: () => void;
 }
-const mokData = [
-  {
-    title: "太上老君常说清静经",
-    time: "2021-09-30",
-    content: "关于太上老君常说清静经关于太上老君常说清静经关于太上老君常说清静经关于太上老君常说清静经",
-  },
-  {
-    title: "太上老君常说清静经2",
-    time: "2021-09-29",
-    content: "关于太上老4君常说清静经关于太上老君常说清静经关于太上老君常说清静经关于太上老君常说清静经",
-  },
-  {
-    title: "太上老君常说清静经",
-    time: "2021-09-30",
-    content: "关于太上老君常说清静经关于太上老君常说清静经关于太上老君常说清静经关于太上老君常说清静经",
-  },
-  {
-    title: "太上老君常说清静经2",
-    time: "2021-09-29",
-    content: "关于太上老4君常说清静经关于太上老君常说清静经关于太上老君常说清静经关于太上老君常说清静经",
-  },
-  {
-    title: "太上老君常说清静经",
-    time: "2021-09-30",
-    content: "关于太上老君常说清静经关于太上老君常说清静经关于太上老君常说清静经关于太上老君常说清静经",
-  },
-  {
-    title: "太上老君常说清静经2",
-    time: "2021-09-29",
-    content: "关于太上老4君常说清静经关于太上老君常说清静经关于太上老君常说清静经关于太上老君常说清静经",
-  }
-]
+
 const ListArticle = () => {
-  const [data, setData] = React.useState<Array<any>>(mokData)
+  const [articles,setArticles] = useState<Array<Article>>([])
+  
+
+  useEffect( ()=>{
+    async function fetchData() {
+      const response = await getArticle();
+      setArticles(response.data);     
+    }
+    fetchData();  
+  },[])
   return (
     <>
-    {data.map((item: ListItemProp) =><ListItem 
-    key={item.title}
-    title={item.title}
-    time={item.time}
-    content={item.content}
-    ></ListItem>)}
+    {articles.map((item: Article) =><ListItem 
+      key={item.id}
+      title={item.title}
+      createTime={item.createTime}
+      content={item.content}  
+      id={item.id}
+       ></ListItem>)}
     </>
   )
 }
-interface ListItemProp {
-  title?: string,
-  content?: string,
-  time?: string
-}
-
-const ListItem: React.FC<(ListItemProp)> = (props) => {
+const ListItem: React.FC<(Article)> = (props) => {  
+  const history = useHistory();
+  const handleClick = (id?: number) => {  
+  history.push(`/writeArticle/${id}`);
+ } 
   return (
-    <ListCard style={{marginBottom:10}}>
+    <ListCard onClick={()=>{handleClick(props.id)}} style={{marginBottom:10}}>
       <CardActionArea>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {props.title}     
           </Typography>
           <Typography gutterBottom  color='textSecondary' variant="overline" component="div">
-              {props.time}
+              {props.createTime}
             </Typography>
           <Typography variant="body2" color="initial">
             {props.content}

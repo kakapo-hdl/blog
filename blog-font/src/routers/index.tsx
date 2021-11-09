@@ -18,7 +18,7 @@ const App = () => {
         <Switch>
           <Route path="/Home" component={HomePage}>
           </Route>
-          <Route path="/WriteArticle" component={WriteArticlePage}>
+          <Route path="/WriteArticle/:id" component={WriteArticlePage}>
           </Route>
           <Redirect from="/" to="/Home" />
 

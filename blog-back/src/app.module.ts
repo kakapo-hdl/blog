@@ -17,7 +17,6 @@ import { Article } from './model/article.model';
       password: 'nM7894561230',
       database: 'blog',
       entities: [Article,Person],
-
       // entities: ['src/**.entity{.ts,.js}'],
       synchronize: true,
       autoLoadEntities: true,

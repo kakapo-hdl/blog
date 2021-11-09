@@ -20,7 +20,7 @@ export class ArticleService {
       .getMany();
     return articles;
   }
-  async getArticleById(id: number): Promise<Article> {
+  async getArticleById(id: string): Promise<Article> {
     return await this.articleRepository.findOne(id);
   }
   async updateArticle(article: Article): Promise<any> {

@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { Article } from 'src/model/article.model';
 import { ArticleService } from 'src/service/Article.sercvice';
@@ -31,7 +32,7 @@ export class ArticleController {
   }
   @Put('update')
   async updateArticle(
-    @Body('id') id: number,
+    @Body('id') id: string,
     @Body('title') title: string,
     @Body('content') content: string,
     @Body('author') author: string,
@@ -49,12 +50,20 @@ export class ArticleController {
     const data = await this.ArticleService.getArticle();
     return data;
   }
-  @Get(':id')
-  async getArticleById(@Param('id') id: number): Promise<Article> {
-    const data = await this.ArticleService.getArticleById(id);
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   const data =  this.ArticleService.getArticleById(Number.parseInt(id));
+  //   return data;
+  // }
+  @Get('get')
+  async getArticleById(@Query() query:{id:string}): Promise<Article> {
+
+    const data = await this.ArticleService.getArticleById(query.id);
     return data;
+
+ 
   }
-  @Delete(':id')
+  @Delete('delete')
   async deleteArticleById(@Param('id') id: number): Promise<any> {
     const data = await this.ArticleService.DeleteArticle(id);
     return data;

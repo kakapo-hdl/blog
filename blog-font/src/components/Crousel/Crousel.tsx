@@ -31,9 +31,6 @@ const Carousel: React.FC<(CarouselProps)> = (props) => {
     setTimeout(()=>setTime('0.8'),0)
     }
   }, [index])
-  // useEffect(() => {
- 
-  // },)
   useEffect(() => {
     lastImg.current.addEventListener('transitionend', function () {
       if (countIndex.current === elements.length) {
