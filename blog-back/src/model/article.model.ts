@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, IsNull } from 'typeorm';
 
 @Entity()
 export class Article {
@@ -20,18 +20,19 @@ export class Article {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({nullable: true})
   title: string;
 
-  @Column()
+  @Column({nullable: true})
   author: string;
 
-  @Column()
+  @Column({nullable: true})
+
   content: string;
 
-  @Column()
+  @Column({nullable: true})
   createTime: Date;
 
-  @Column()
+  @Column({nullable: true})
   lastUpdateTime: Date;
 }

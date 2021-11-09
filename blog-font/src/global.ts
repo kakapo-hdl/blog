@@ -1,7 +1,7 @@
 import {createGlobalStyle} from "styled-components"
 
 const GlobalStyle = createGlobalStyle`
-body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td { margin:0; padding:0; }
+/* body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td { margin:0; padding:0; } */
 
 body { background:#F4F5F5; color:#555; font-size:1rem; font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif; }
 
@@ -42,6 +42,9 @@ html {overflow-y: scroll;}
 .ar {text-align:right}
 
 .hide {display:none}
+.MuiAlert-message{
+  width: 100% !important;
+}
 
 `
 

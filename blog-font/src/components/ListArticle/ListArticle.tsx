@@ -36,8 +36,8 @@ const ListArticle = () => {
 }
 const ListItem: React.FC<(Article)> = (props) => {  
   const history = useHistory();
-  const handleClick = (id?: number) => {  
-  history.push(`/writeArticle/${id}`);
+  const handleClick = (key?: number) => {  
+  history.push(`/writeArticle/${key}`);
  } 
   return (
     <ListCard onClick={()=>{handleClick(props.id)}} style={{marginBottom:10}}>

@@ -32,18 +32,15 @@ export class ArticleController {
   }
   @Put('update')
   async updateArticle(
-    @Body('id') id: string,
-    @Body('title') title: string,
-    @Body('content') content: string,
-    @Body('author') author: string,
-  ): Promise<any> {
-    const oldArticle = await this.ArticleService.getArticleById(id);
-    oldArticle.author = author;
-    oldArticle.content = content;
-    oldArticle.title = title;
+    @Body() article: Article,
+
+  ): Promise<any> {    
+    const oldArticle = await this.ArticleService.getArticleById(article.id.toString());
+    oldArticle.author = article.author;
+    oldArticle.content = article.content;
+    oldArticle.title = article.title;
     const result = await this.ArticleService.insertArticle(oldArticle);
     return result;
-    // this.productService.insertProduct(proTitle, proDesc, proPpice);
   }
   @Get('getAll')
   async getArticles(): Promise<Article[]> {
