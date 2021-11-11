@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, IsNull } from 'typeorm';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 @Entity()
 export class Article {
@@ -16,18 +17,20 @@ export class Article {
     this.createTime = createTime;
     this.lastUpdateTime = lastUpdateTime;
   }
-
+ 
   @PrimaryGeneratedColumn()
   id: number;
 
+  @IsNotEmpty()
   @Column({nullable: true})
   title: string;
 
+  @IsNotEmpty()
   @Column({nullable: true})
   author: string;
 
+  @IsNotEmpty()
   @Column({nullable: true})
-
   content: string;
 
   @Column({nullable: true})
