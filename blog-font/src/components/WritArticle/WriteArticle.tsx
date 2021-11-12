@@ -102,7 +102,7 @@ const WriteArticle = () => {
                 setArticle(res.data.data)
                 // if(res.status===200)   
                 showMessage({ message: 'create success!', type: 'success', isLoading: false })
-                // history.push(`/writeArticle/${res.data.data.id}`);
+                history.push(`/writeArticle/${res.data.data.id}`);
               }
               catch (error) {
                 showMessage({ message: 'create fail!', type: 'error', isLoading: false })
