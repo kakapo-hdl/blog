@@ -30,7 +30,7 @@ export class Article {
   author: string;
 
   @IsNotEmpty()
-  @Column({nullable: true})
+  @Column({nullable: true,type: 'nvarchar',length:'Max'})
   content: string;
 
   @Column({nullable: true})

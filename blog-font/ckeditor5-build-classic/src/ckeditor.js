@@ -38,10 +38,9 @@ import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 import Code from '@ckeditor/ckeditor5-basic-styles/src/code';
 import Subscript from '@ckeditor/ckeditor5-basic-styles/src/subscript';
 import Superscript from '@ckeditor/ckeditor5-basic-styles/src/superscript';
-// import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
 import CodeBlock from '@ckeditor/ckeditor5-code-block/src/codeblock';
 import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace';
-import Font from '@ckeditor/ckeditor5-font/src/font';
+// import Font from '@ckeditor/ckeditor5-font/src/font';
 import Highlight from '@ckeditor/ckeditor5-highlight/src/highlight';
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
 import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
@@ -51,12 +50,10 @@ export default class ClassicEditor extends ClassicEditorBase {}
 
 // Plugins to include in the build.
 ClassicEditor.builtinPlugins = [
-	Font, 
-	
+	// Font, 
 	Highlight,
 	FindAndReplace,
 	CodeBlock,
-	// BlockQuote,
 	Underline,
 	Strikethrough,
 	Code,
@@ -257,7 +254,8 @@ ClassicEditor.defaultConfig = {
 			'findAndReplace',
 			'highlight',
 			'removeFormat',
-			'alignment'
+			'alignment',
+			//  'font'
 		]
 	},
 	alignment: {
