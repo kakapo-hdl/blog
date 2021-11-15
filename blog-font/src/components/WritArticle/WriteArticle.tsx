@@ -17,6 +17,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import axios from "axios";
 import { MyCustomUploadAdapterPlugin } from "./upload";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 const ckEditorConfig = {
   language: 'zh-cn',
@@ -41,8 +42,8 @@ const ckEditorConfig = {
     // ],
     // 工具栏自动换行
     shouldNotGroupWhenFull: true,
-  },           
-   extraPlugins: [ MyCustomUploadAdapterPlugin ],
+  },
+  extraPlugins: [MyCustomUploadAdapterPlugin],
 };
 
 
@@ -56,7 +57,7 @@ const WriteArticle = () => {
   const [article, setArticle] = useState<Article>({})
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState<Message>({ time: 3000, message: '', type: 'info', isLoading: true, key: new Date().getTime().toString() });
-  
+
   const showMessage = (mes: Message) => {
     mes.key = new Date().getTime().toString();
     setMessage(mes);
@@ -87,7 +88,7 @@ const WriteArticle = () => {
     } else {
       fetchData();
     }
-    
+
   }, [])
 
   return (
@@ -155,7 +156,7 @@ const WriteArticle = () => {
                 onChange={handleChange}
                 size="medium"
                 InputLabelProps={{
-                  shrink: true,
+                  shrink: false,
                 }}
                 error={Boolean(errors.title)}
               />
@@ -163,23 +164,47 @@ const WriteArticle = () => {
               <br></br>
 
               <TextField
-                fullWidth
+                style={{width:'38%',marginRight:'2%'}}
                 variant="outlined"
                 id="author"
                 name="author"
                 label="Author"
                 value={values.author}
                 onChange={handleChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                // InputLabelProps={{
+                //   shrink: true,
+                // }}
                 size="medium"
                 error={Boolean(errors.author)}
-
               />
+
+  
+              <FormControl  style={{width:'60%'}} >
+                <InputLabel id="articleType">article type</InputLabel>
+                <Select
+                  labelId="articleType"
+                  name="articleType"
+                  id="articleType"
+                  value={values.ArticleTypeId}
+                  label="article type"
+                  onChange={handleChange}
+                  size="medium"
+                  
+                // InputLabelProps={{
+                //   shrink: true,
+                // }}
+                >
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+              </FormControl>
+
+
+
               <br></br>
               <br></br>
-              <br></br>
+
               <CKEditor
                 config={ckEditorConfig}
                 editor={ClassicEditor}

@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, IsNull } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, IsNull, OneToMany, JoinColumn } from 'typeorm';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Article } from './article.model';
 
 @Entity()
 export class ArticleType {
@@ -38,4 +39,7 @@ export class ArticleType {
 
   @Column({ nullable: false })
   lastUpdateTime: Date;
+
+  @OneToMany(type => Article, article => article.articleType)
+  articles: Article[];
 }

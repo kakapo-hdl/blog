@@ -2,8 +2,10 @@ import {
   Body,
   Controller,
   Delete,
+  forwardRef,
   Get,
   HttpStatus,
+  Inject,
   Param,
   Post,
   Put,
@@ -13,12 +15,17 @@ import {
 import { ArticleType } from 'src/model/ArticleType.model';
 import { ArticleTypeService } from 'src/service/ArticleType.sercvice';
 import { Response } from 'express';
+import { ArticleService } from 'src/service/Article.sercvice';
 
 @Controller('ArticleType')
 export class ArticleTypeController {
   constructor(
     // @Inject(forwardRef(() => ArticleTypeService))
     private readonly ArticleTypeService: ArticleTypeService,
+
+    // @Inject(forwardRef(() => ArticleService))
+    // private readonly ArticleService: ArticleService,
+
   ) {}
 
   @Post('insert')
@@ -64,11 +71,11 @@ export class ArticleTypeController {
     const data = await this.ArticleTypeService.getArticleType();
     return data;
   }
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   const data =  this.ArticleTypeService.getArticleTypeById(Number.parseInt(id));
-  //   return data;
-  // }
+  @Get('getAllWithArticle')
+  async getArticleTypesWithArticle(): Promise<ArticleType[]> {
+    const data = await this.ArticleTypeService.getArticleTypeWithArticle();
+    return data;
+  }
   @Get('get')
   async getArticleTypeById(
     @Query() query: { id: string },

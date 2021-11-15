@@ -38,8 +38,8 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { Alert, Slide, Stack } from "@mui/material";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
 import { ArticleType, Message } from "../models/model";
-import { insertArticleType } from "../api/service";
-
+import { getArticleType, insertArticleType,updateArticleType } from "../api/service";
+import moment  from 'moment'
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
@@ -48,8 +48,6 @@ const Transition = React.forwardRef(function Transition(
 ) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
-
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -59,7 +57,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
   },
 }));
-
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
@@ -69,7 +66,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-
 export interface DialogTitleProps {
   id: string;
   children?: React.ReactNode;
@@ -134,8 +130,8 @@ const Row: React.FC<({ row: ArticleType,editArticleType: (value:ArticleType)=>vo
           <TableCell component="th" scope="row">{row.description}</TableCell>
           <TableCell align="center">{row.color}</TableCell>
 
-          <TableCell align="center">{row.createTime?.toDateString()}</TableCell>
-          <TableCell align="center">{row.lastUpdateTime?.toDateString()}</TableCell>
+          <TableCell align="center">{ moment(row.createTime).format('YYYY-MM-DD ') }</TableCell>
+          <TableCell align="center"> { moment(row.lastUpdateTime).format('YYYY-MM-DD ')}</TableCell>
           <TableCell align="center" >
             <IconButton
               size="small"
@@ -210,25 +206,45 @@ const Row: React.FC<({ row: ArticleType,editArticleType: (value:ArticleType)=>vo
 }
 
 
-function createData(article: ArticleType) {
-  return article;
-}
+// function createData(article: ArticleType) {
+//   return article;
+// }
 
 
-const rows = [
-  createData({ id: 1, type: '历史', color: 'blue', description: '没什么sdfsdfsdfsd', createTime: new Date(), lastUpdateTime: new Date() }),
-  createData({ id: 2, type: '历史sdf', color: 'blue', description: '没什么sdfsdfsdf', createTime: new Date(), lastUpdateTime: new Date() }),
+// const rows = [
+//   createData({ id: 1, type: '历史', color: 'blue', description: '没什么sdfsdfsdfsd', createTime: new Date(), lastUpdateTime: new Date() }),
+//   createData({ id: 2, type: '历史sdf', color: 'blue', description: '没什么sdfsdfsdf', createTime: new Date(), lastUpdateTime: new Date() }),
 
-];
+// ];
 
 
 const ManagePage: React.FC<any> = (props) => {
   const [open, setOpen] = React.useState(false);
+  const [articleTypes, setArticleTypes] = React.useState<Array<ArticleType>>([]);
   const [openDlog, setOpenDlog] = React.useState(false);
-
   const [articleType, setArticleType] = React.useState<ArticleType>({});
+  const [message, setMessage] = React.useState<Message>({ time: 3000, message: '', type: 'info', isLoading: true, key: new Date().getTime().toString()});
+  const myFormRef = React.useRef<FormikProps<any>>(null);
   const articleInit: ArticleType = {type:'',color:'',description:''};
-  const [message, setMessage] = React.useState<Message>({ time: 3000, message: '', type: 'info', isLoading: true, key: new Date().getTime().toString() });
+  
+  React.useEffect(()=>{
+    loadFormData();
+  },[]);
+  const loadFormData = async ()=>{
+    try {
+      showMessage({ message: 'init...', type: 'info', isLoading: true });
+      const res = await getArticleType();        
+      if(res.status === 200) {
+        setArticleTypes(res.data)
+        showMessage({ message: 'loading success', type: 'success', isLoading: false });
+      }else{
+        showMessage({ message: res.data.msg, type: 'error', isLoading: false });
+      }
+    } catch (error) {
+      showMessage({ message: 'Init error', type: 'error', isLoading: false });
+    }
+    
+  }
   const showMessage = (mes: Message) => {
     mes.key = new Date().getTime().toString();
     setMessage(mes);
@@ -237,12 +253,9 @@ const ManagePage: React.FC<any> = (props) => {
   const handleCloseDlog = () => {
     setOpenDlog(false);
   };
-  const myFormRef = React.useRef<FormikProps<any>>(null);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = (e?: any, reson?: any) => {
     if (reson === 'backdropClick') return null
     setArticleType(articleInit);
@@ -288,7 +301,7 @@ const ManagePage: React.FC<any> = (props) => {
                 </StyledTableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row, index) => (
+                {articleTypes.map((row, index) => (
                   <Row key={row.id} editArticleType={editArticleType} row={row} />
                 ))}
               </TableBody>
@@ -324,11 +337,24 @@ const ManagePage: React.FC<any> = (props) => {
                   await insertArticleType(values);
                   showMessage({ message: 'create success!', type: 'success', isLoading: false })
                   handleClose();
+                  loadFormData();
                 }
                 catch (error) {
                   showMessage({ message: 'create fail!', type: 'error', isLoading: false })
                 }
-              }  
+              }else{
+                try {
+                  showMessage({ message: 'updating...', type: 'info', isLoading: true });
+                  await updateArticleType(values);
+                  showMessage({ message: 'update success!', type: 'success', isLoading: false })
+                  handleClose();
+                  loadFormData();
+
+                }
+                catch (error) {
+                  showMessage({ message: 'update fail!', type: 'error', isLoading: false })
+                }
+              }
               
             }
             }

@@ -4,6 +4,7 @@ import { createWriteStream } from 'fs';
 import { networkInterfaces } from 'os';
 import { join } from 'path/posix';
 import  {Response} from 'express';
+import { getIPAdress, Port } from 'src/constants/constants';
 
 // import { ProductsService } from 'src/service/product.sercvice';
 
@@ -26,12 +27,15 @@ export class UtilsController {
   @UseInterceptors(
   FileInterceptor('image'))
   uploadFile(@Body('title') proTitle: string,@UploadedFile() file: Express.Multer.File,@Res() res: Response): any {
-    const writeImage = createWriteStream(join(__dirname, '..','../blog-back/public', `${file.originalname}`))    
+    const writeImage = createWriteStream(join(__dirname, '..','../blog-back/public', `${file.originalname}`))  
+    console.log();
+      
     try {
       writeImage.write(file.buffer);
-      return res.status(HttpStatus.OK).send({url:'http://192.168.3.3:3300/public/'+ `${file.originalname}`,"uploaded":true});
+      return res.status(HttpStatus.OK).send({url:`http://${getIPAdress()}:${Port}/public/`+ `${file.originalname}`,"uploaded":true});
     } catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({"uploaded":false,msg:'文件写入错误'}); 
     } 
   }
 }
+
