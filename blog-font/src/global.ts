@@ -46,6 +46,9 @@ html {overflow-y: scroll;}
   width: 100% !important;
 }
 
+.ck-content{
+  min-height: 500px !important;
+}
 `
 
 export default GlobalStyle;

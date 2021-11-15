@@ -1,5 +1,5 @@
 // import { Footer } from "antd/lib/layout/layout";
-import { Container, Grid, InputAdornment, TextField } from "@material-ui/core";
+import { CircularProgress, Container, Grid, InputAdornment, Snackbar, TextField } from "@material-ui/core";
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
@@ -30,8 +30,25 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
 import CloseIcon from '@mui/icons-material/Close';
 import CircleIcon from '@mui/icons-material/Circle';
-import { Formik, FastField } from 'formik';
-import { VisibilityOff } from "@material-ui/icons";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import { Formik, FastField, useFormik, FormikProps } from 'formik';
+import * as yup from 'yup';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import { Alert, Slide, Stack } from "@mui/material";
+import { TransitionProps } from "@material-ui/core/transitions/transition";
+import { ArticleType, Message } from "../models/model";
+import { insertArticleType } from "../api/service";
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="down" ref={ref} {...props} />;
+});
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,6 +59,17 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
   },
 }));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
+
 export interface DialogTitleProps {
   id: string;
   children?: React.ReactNode;
@@ -49,7 +77,6 @@ export interface DialogTitleProps {
 }
 const BootstrapDialogTitle = (props: DialogTitleProps) => {
   const { children, onClose, ...other } = props;
-
   return (
     <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
       {children}
@@ -70,53 +97,66 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
     </DialogTitle>
   );
 };
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
-
-export interface IndexPageProps {
-  row: ReturnType<typeof createData>
-}
 
 
 
-const Row: React.FC<(IndexPageProps)> = (props) => {
-  const { row } = props;
+const Row: React.FC<({ row: ArticleType,editArticleType: (value:ArticleType)=>void })> = (props) => {
   const [open, setOpen] = React.useState(false);
+  const [openConfirm, setOpenConfirm] = React.useState(false);
+  const { row,editArticleType } = props;
+  const handleClickOpen = () => {
+    setOpenConfirm(true);
+  };
+  const handleClickClose = () => {
+    setOpenConfirm(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <>
       <React.Fragment>
         <StyledTableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-          <TableCell>
+
+          <TableCell align="right">
             <IconButton
               aria-label="expand row"
               size="small"
+              color="secondary"
               onClick={() => setOpen(!open)}
             >
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row">
-            {row.name}
+          <TableCell align="center">{row.id}</TableCell>
+          <TableCell  align="left">{row.type}</TableCell>
+          <TableCell component="th" scope="row">{row.description}</TableCell>
+          <TableCell align="center">{row.color}</TableCell>
+
+          <TableCell align="center">{row.createTime?.toDateString()}</TableCell>
+          <TableCell align="center">{row.lastUpdateTime?.toDateString()}</TableCell>
+          <TableCell align="center" >
+            <IconButton
+              size="small"
+              color="error"
+              onClick={handleClickOpen}>
+              <DeleteForeverIcon />
+            </IconButton>
+            <IconButton
+              onClick={()=>editArticleType(row)}
+              color="primary"
+              size="small">
+              <EditTwoToneIcon />
+            </IconButton>
           </TableCell>
-          <TableCell align="right">{row.calories}</TableCell>
-          <TableCell align="right">{row.fat}</TableCell>
-          <TableCell align="right">{row.carbs}</TableCell>
-          <TableCell align="right">{row.protein}</TableCell>
         </StyledTableRow>
+
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
-                  History
-                </Typography>
+                <Typography variant="body1" gutterBottom component="div">Aticle</Typography>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
@@ -126,8 +166,8 @@ const Row: React.FC<(IndexPageProps)> = (props) => {
                       <TableCell align="right">Total price ($)</TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>
-                    {row.history.map((historyRow) => (
+                  {/* <TableBody>
+                    {row.history.map((historyRow: any) => (
                       <TableRow key={historyRow.date}>
                         <TableCell component="th" scope="row">
                           {historyRow.date}
@@ -139,84 +179,91 @@ const Row: React.FC<(IndexPageProps)> = (props) => {
                         </TableCell>
                       </TableRow>
                     ))}
-                  </TableBody>
+                  </TableBody> */}
                 </Table>
               </Box>
             </Collapse>
           </TableCell>
         </TableRow>
       </React.Fragment>
+      <Dialog
+        open={openConfirm}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Let Google help apps determine location. This means sending anonymous
+            location data to Google, even when no apps are running.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClickClose}>Disagree</Button>
+          <Button onClick={handleClickClose}>Agree</Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 }
 
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-  price: number,
-) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      {
-        date: '2020-01-05',
-        customerId: '11091700',
-        amount: 3,
-      },
-      {
-        date: '2020-01-02',
-        customerId: 'Anonymous',
-        amount: 1,
-      },
-    ],
-  };
+function createData(article: ArticleType) {
+  return article;
 }
 
 
-
-
 const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-  createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
+  createData({ id: 1, type: '历史', color: 'blue', description: '没什么sdfsdfsdfsd', createTime: new Date(), lastUpdateTime: new Date() }),
+  createData({ id: 2, type: '历史sdf', color: 'blue', description: '没什么sdfsdfsdf', createTime: new Date(), lastUpdateTime: new Date() }),
+
 ];
 
 
 const ManagePage: React.FC<any> = (props) => {
   const [open, setOpen] = React.useState(false);
-  const [fullWidth, setFullWidth] = React.useState(true);
-  const [maxWidth, setMaxWidth] = React.useState<DialogProps['maxWidth']>('sm');
+  const [openDlog, setOpenDlog] = React.useState(false);
+
+  const [articleType, setArticleType] = React.useState<ArticleType>({});
+  const articleInit: ArticleType = {type:'',color:'',description:''};
+  const [message, setMessage] = React.useState<Message>({ time: 3000, message: '', type: 'info', isLoading: true, key: new Date().getTime().toString() });
+  const showMessage = (mes: Message) => {
+    mes.key = new Date().getTime().toString();
+    setMessage(mes);
+    setOpenDlog(true);
+  }
+  const handleCloseDlog = () => {
+    setOpenDlog(false);
+  };
+  const myFormRef = React.useRef<FormikProps<any>>(null);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (e?: any, reson?: any) => {
+    if (reson === 'backdropClick') return null
+    setArticleType(articleInit);
     setOpen(false);
   };
-
-  const handleMaxWidthChange = (event: SelectChangeEvent<typeof maxWidth>) => {
-    setMaxWidth(
-      // @ts-expect-error autofill of arbitrary value is not handled.
-      event.target.value,
-    );
+  const createArticleType = () => {
+    handleClickOpen();
   };
-  const handleFullWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFullWidth(event.target.checked);
+  const editArticleType = (value:ArticleType) => {
+    setArticleType(value);
+    handleClickOpen();
   };
+  const validationSchema = yup.object({
+    type: yup
+      .string()
+      .required('article type is required'),
+    color: yup
+      .string()
+      .required('color is required'),
+  });
   return (
-
     <Container fixed maxWidth={'lg'} style={{ height: '100vh', paddingTop: 10 }}>
       <Grid container spacing={0}>
         <Grid item xs={12} md={12}>
@@ -224,17 +271,25 @@ const ManagePage: React.FC<any> = (props) => {
             <Table aria-label="collapsible table">
               <TableHead>
                 <StyledTableRow>
-                  <StyledTableCell />
-                  <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-                  <StyledTableCell align="right">Calories</StyledTableCell>
-                  <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-                  <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-                  <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
+                  <StyledTableCell width={50} />
+                  <StyledTableCell width={50} align="center">序号</StyledTableCell>
+                  <StyledTableCell>文章类型</StyledTableCell>
+                  <StyledTableCell  align="center">描述</StyledTableCell>
+                  <StyledTableCell width={100} align="center">类型颜色&nbsp;</StyledTableCell>
+                  <StyledTableCell width={150} align="center">创建日期</StyledTableCell>
+                  <StyledTableCell width={150} align="center">更新日期</StyledTableCell>
+                  <StyledTableCell width={100} align="center">
+                    操作
+                    <IconButton  onClick={createArticleType} color="success" size="small">
+                      <AddOutlinedIcon fontSize='medium'/>
+                    </IconButton>
+                  </StyledTableCell>
+
                 </StyledTableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <Row key={row.name} row={row} />
+                {rows.map((row, index) => (
+                  <Row key={row.id} editArticleType={editArticleType} row={row} />
                 ))}
               </TableBody>
             </Table>
@@ -245,73 +300,76 @@ const ManagePage: React.FC<any> = (props) => {
       <Button variant="outlined" onClick={handleClickOpen}>
         Open max-width dialog
       </Button>
+
+
       <Dialog
         fullWidth={true}
         maxWidth={'md'}
         open={open}
-        onClose={handleClose}
+        onClose={(e, reson) => handleClose(e, reson)}
       >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Modal title
+          {typeof articleType.id==='undefined' ? ' Create': 'Update'}   Article Type
         </BootstrapDialogTitle>
         <DialogContent dividers>
-
           <Formik
+            innerRef={myFormRef}
             enableReinitialize
-            initialValues={{ title: 'asdf', color: '#fff', description: 'description' }}
+            initialValues={articleType}
+            validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
-              // if (values.id) {
-              //   try {
-              //     showMessage({ message: 'updating...', type: 'info', isLoading: true })
-              //     await updateArticle(values);
-              //     showMessage({ message: 'update success!', type: 'success', isLoading: false })
-              //   } catch (error) {
-              //     showMessage({ message: 'update fail', type: 'error', isLoading: false })
-              //   }
-
-              //   // if(res.status===200)  
-              // } else {
-              //   try {
-              //     showMessage({ message: 'submitting...', type: 'info', isLoading: true });
-              //     const res = await insertArticle(values)
-              //     // if (res.status===200) {
-              //     setArticle(res.data.data)
-              //     // if(res.status===200)   
-              //     showMessage({ message: 'create success!', type: 'success', isLoading: false })
-              //     history.push(`/writeArticle/${res.data.data.id}`);
-              //   }
-              //   catch (error) {
-              //     showMessage({ message: 'create fail!', type: 'error', isLoading: false })
-              //   }
-              // }
+              if(typeof articleType.id==='undefined'){
+                try {
+                  showMessage({ message: 'submitting...', type: 'info', isLoading: true });
+                  await insertArticleType(values);
+                  showMessage({ message: 'create success!', type: 'success', isLoading: false })
+                  handleClose();
+                }
+                catch (error) {
+                  showMessage({ message: 'create fail!', type: 'error', isLoading: false })
+                }
+              }  
+              
             }
             }
-
           >
             {({
               values,
               errors,
               touched,
               handleChange,
-              handleBlur,
               handleSubmit,
               isSubmitting,
               /* and other goodies */
             }) => (
               <form onSubmit={handleSubmit}>
-
                 <TextField
                   fullWidth
-                  required
+                  variant="outlined"
+                  id="type"
+                  name="type"
+                  label={<> <span style={{ color: 'red' }}>*</span>文章类型</>}
+                  placeholder="请输入文章类型"
+                  value={values.type}
+                  onChange={handleChange}
+                  size="medium"
+                  error={touched.type && Boolean(errors.type)}
+                  helperText={touched.type && (errors.type)}
+                />
+                <br></br>
+                <br></br>
+                <TextField
+                  fullWidth
                   variant="outlined"
                   id="color"
                   name="color"
-                  label="文章类型颜色"
+                  label={<><span style={{ color: 'red' }}>*</span>文章类型颜色</>}
                   placeholder="请输入文章类型颜色"
                   value={values.color}
                   onChange={handleChange}
                   size="medium"
-                  error={Boolean(errors.description)}
+                  error={touched.color && Boolean(errors.color)}
+                  helperText={touched.color && (errors.color)}
                   InputProps={{
                     endAdornment: <InputAdornment position="end"> <IconButton><CircleIcon style={{ color: `${values.color}` }} /></IconButton></InputAdornment>,
                   }}
@@ -320,25 +378,6 @@ const ManagePage: React.FC<any> = (props) => {
                 <br></br>
                 <TextField
                   fullWidth
-                  required
-                  variant="outlined"
-                  id="title"
-                  name="title"
-                  label="文章类型"
-                  placeholder="请输入文章类型"
-                  value={values.title}
-                  onChange={handleChange}
-                  size="medium"
-                // InputLabelProps={{
-                //   shrink: true,
-                // }}
-                // error={Boolean(errors.title)}
-                />
-                <br></br>
-                <br></br>
-                <TextField
-                  fullWidth
-                  required
                   variant="outlined"
                   id="description"
                   name="description"
@@ -346,63 +385,45 @@ const ManagePage: React.FC<any> = (props) => {
                   placeholder="请输入文章介绍"
                   multiline
                   rows={4}
-                  value={values.color}
+                  value={values.description}
                   onChange={handleChange}
                   size="medium"
-                  error={Boolean(errors.description)}
-
                 />
                 <br></br>
                 <br></br>
                 <br></br>
-              </form>
-            )}
-          </Formik>
-          {/* <Box
-            noValidate
-            component="form"
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              m: 'auto',
-              width: 'fit-content',
-            }}
-          > */}
-          {/* <FormControl sx={{ mt: 2, minWidth: 120 }}>
-              <InputLabel htmlFor="max-width">maxWidth</InputLabel>
-              <Select
-                autoFocus
-                value={maxWidth}
-                onChange={handleMaxWidthChange}
-                label="maxWidth"
-                inputProps={{
-                  name: 'max-width',
-                  id: 'max-width',
-                }}
-              >
-                <MenuItem value={false as any}>false</MenuItem>
-                <MenuItem value="xs">xs</MenuItem>
-                <MenuItem value="sm">sm</MenuItem>
-                <MenuItem value="md">md</MenuItem>
-                <MenuItem value="lg">lg</MenuItem>
-                <MenuItem value="xl">xl</MenuItem>
-              </Select>
-            </FormControl> */}
-          {/* <FormControlLabel
-              sx={{ mt: 1 }}
-              control={
-                <Switch checked={fullWidth} onChange={handleFullWidthChange} />
-              }
-              label="Full width"
-            /> */}
-          {/* </Box> */}
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={handleClose}>提交</Button>
 
-          <Button variant="contained" onClick={handleClose}>关闭</Button>
+              </form>
+
+            )}
+
+          </Formik>
+        </DialogContent>
+
+        <DialogActions>
+          <Button variant="contained" onClick={() => myFormRef.current?.submitForm()} >Submit</Button>
+          <Button variant="contained" onClick={handleClose}>Close</Button>
         </DialogActions>
+
+
+
+
+
       </Dialog>
+
+      <Stack spacing={3} sx={{ width: '100%' }}>
+          <Snackbar anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }} open={openDlog} autoHideDuration={message.time === undefined ? 3000 : message.time}
+            key={message ? message.key : undefined}
+            onClose={handleCloseDlog}>
+            <Alert onClose={handleCloseDlog} severity={message?.type} sx={{ width: '100%', minWidth: 300 }}>
+              <span style={{ fontSize: '1rem' }}>{message?.message}</span> {message?.isLoading ? <CircularProgress style={{ float: "right" }} size={20} /> : null}
+            </Alert>
+          </Snackbar>
+
+        </Stack>
     </Container>
 
   );

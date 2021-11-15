@@ -7,6 +7,16 @@ export interface Article {
   lastUpdateTime?: Date
 }
 
+export interface ArticleType {
+  id?: number,
+  type?: string,
+  color?: string,
+  description?: string,
+  createTime?: Date,
+  lastUpdateTime?: Date
+}
+
+
 export interface Message {
   message?: string,
   type?: "success" | "info" | "warning" | "error",

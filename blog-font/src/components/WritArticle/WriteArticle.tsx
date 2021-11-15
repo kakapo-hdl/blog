@@ -8,13 +8,42 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { Formik } from 'formik';
 import { useEffect } from "react";
-import {  getArticleById, insertArticle, updateArticle } from "../../api/service";
+import { getArticleById, insertArticle, updateArticle } from "../../api/service";
 import { useHistory, useParams } from "react-router";
 import { Article, Message } from "../../models/model";
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import axios from "axios";
+import { MyCustomUploadAdapterPlugin } from "./upload";
+
+const ckEditorConfig = {
+  language: 'zh-cn',
+  toolbar: {
+    // items: [
+    //   // 标题 加粗 斜体 撤销 重做 超链接 项目符号列表 项目编号列表
+    //   'heading',
+    //   '|',
+    //   'bold',
+    //   'italic',
+    //   'undo',
+    //   'redo',
+    //   'link',
+    //   'bulletedList',
+    //   'numberedList',
+    //   // 插入表格 块引用
+    //   '|',
+    //   'insertTable',
+    //   // 插入图像 更改图片替换文本 图片通栏显示 图片侧边显示
+    //   '|',
+    //   'imageUpload',
+    // ],
+    // 工具栏自动换行
+    shouldNotGroupWhenFull: true,
+  },           
+   extraPlugins: [ MyCustomUploadAdapterPlugin ],
+};
 
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
@@ -27,14 +56,14 @@ const WriteArticle = () => {
   const [article, setArticle] = useState<Article>({})
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState<Message>({ time: 3000, message: '', type: 'info', isLoading: true, key: new Date().getTime().toString() });
-  const handleClick = () => {
-    setOpen(true);
-  };
-
+  
   const showMessage = (mes: Message) => {
     mes.key = new Date().getTime().toString();
     setMessage(mes);
   }
+  const handleClick = () => {
+    setOpen(true);
+  };
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
@@ -58,15 +87,13 @@ const WriteArticle = () => {
     } else {
       fetchData();
     }
-
+    
   }, [])
 
   return (
     <>
       <div className="App">
-
         <Stack spacing={3} sx={{ width: '100%' }}>
-
           <Snackbar anchorOrigin={{
             vertical: 'top',
             horizontal: 'center',
@@ -92,14 +119,11 @@ const WriteArticle = () => {
                 showMessage({ message: 'update fail', type: 'error', isLoading: false })
               }
 
-              // if(res.status===200)  
             } else {
               try {
                 showMessage({ message: 'submitting...', type: 'info', isLoading: true });
                 const res = await insertArticle(values)
-                // if (res.status===200) {
                 setArticle(res.data.data)
-                // if(res.status===200)   
                 showMessage({ message: 'create success!', type: 'success', isLoading: false })
                 history.push(`/writeArticle/${res.data.data.id}`);
               }
@@ -108,80 +132,77 @@ const WriteArticle = () => {
               }
             }
           }
-        }
-      
+          }
+
         >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-          /* and other goodies */
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              id="title"
-              name="title"
-              label="Title"
-              value={values.title}
-              onChange={handleChange}
-              size="medium"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              error={Boolean(errors.title)}
-            />
-            <br></br>
-            <br></br>
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+          }) => (
+            <form onSubmit={handleSubmit}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                id="title"
+                name="title"
+                label="Title"
+                value={values.title}
+                onChange={handleChange}
+                size="medium"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                error={Boolean(errors.title)}
+              />
+              <br></br>
+              <br></br>
 
-            <TextField
-              fullWidth
-              variant="outlined"
-              id="author"
-              name="author"
-              label="Author"
-              value={values.author}
-              onChange={handleChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              size="medium"
-              error={Boolean(errors.author)}
+              <TextField
+                fullWidth
+                variant="outlined"
+                id="author"
+                name="author"
+                label="Author"
+                value={values.author}
+                onChange={handleChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                size="medium"
+                error={Boolean(errors.author)}
 
-            />
-            <br></br>
-            <br></br>
-            <br></br>
+              />
+              <br></br>
+              <br></br>
+              <br></br>
+              <CKEditor
+                config={ckEditorConfig}
+                editor={ClassicEditor}
+                data={values.content}
+                onReady={(editor: any) => {
+                }}
+                onChange={(event: any, editor: any) => {
+                  const data = editor.getData();
+                  values.content = data
+                }}
 
-            <CKEditor
-              // config={ClassicEditor}
-              editor={ClassicEditor}
-              data={values.content}
-              onReady={(editor: any) => {
-                // You can store the "editor" and use when it is needed.
-              }}
-              onChange={(event: any, editor: any) => {
-                const data = editor.getData();
-                values.content = data
-              }}
+              />
+              <br></br>
 
-            />
-            <br></br>
+              <Button variant='contained' color="primary" type="submit" onClick={handleClick}>
+                {values.id === undefined ? "Submit" : "Update"}
+              </Button>
+            </form>
+          )}
+        </Formik>
 
 
-            <Button variant='contained' color="primary" type="submit" onClick={handleClick}>
-              {values.id === undefined ? "Submit" : "Update"}
-            </Button>
-          </form>
-        )}
-      </Formik>
-
-    </div >
+      </div >
     </>
   )
 }

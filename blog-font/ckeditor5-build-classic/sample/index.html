@@ -30,7 +30,13 @@
 <script>
 
  alert(111)
-ClassicEditor.create(document.querySelector( '#editor' ) )
+ClassicEditor.create(document.querySelector( '#editor' ),{
+	     ckfinder: {
+        	 uploadUrl: "http://localhost:3300/utils/upload"
+         }
+
+} )
+
 		.then( editor => {
 			window.editor = editor;
 		} )
