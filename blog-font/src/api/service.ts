@@ -15,6 +15,9 @@ export const getArticleById = async(id: number)=>{
 export const getArticleType = async()=>{
   return await axios.get('/api/ArticleType/getAll')
 }
+export const getArticleTypeMap = async()=>{
+  return await axios.get('/api/ArticleType/getAllMap')
+}
 export const insertArticleType = async(data: any)=>{
   return await axios.post('/api/ArticleType/insert',data)
 }

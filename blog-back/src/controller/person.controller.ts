@@ -10,9 +10,7 @@ import { PersonService } from 'src/service/person.sercvice';
 
 @Controller('person')
 export class PersonController {
-  constructor(
-    private readonly personService: PersonService,
-  ) {}
+  constructor(private readonly personService: PersonService) {}
 
   @Post('insert')
   addPerson(

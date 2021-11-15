@@ -25,14 +25,14 @@ export class ArticleTypeService {
 
   async getArticleTypeWithArticle(): Promise<ArticleType[]> {
     // const ArticleTypes = await getConnection().getRepository(ArticleType).find({ relations: ["articles"]})
-     
+
     const ArticleTypes = await getConnection()
-    .getRepository(ArticleType)
-    .createQueryBuilder("articleType")
-    .leftJoinAndSelect("articleType.articles", "articles")
-    .orderBy('articles.id', 'ASC')
-    .orderBy('ArticleType.id', 'DESC')
-    .getMany();
+      .getRepository(ArticleType)
+      .createQueryBuilder('articleType')
+      .leftJoinAndSelect('articleType.articles', 'articles')
+      .orderBy('articles.id', 'ASC')
+      .orderBy('ArticleType.id', 'DESC')
+      .getMany();
     return ArticleTypes;
   }
   async getArticleTypeById(id: string): Promise<ArticleType> {

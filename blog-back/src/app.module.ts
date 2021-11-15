@@ -1,4 +1,3 @@
-
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PeronMudule } from './person.module';
@@ -33,7 +32,7 @@ import { ArticleTypeMudule } from './ArticleType.module';
     }),
     ArticleMudule,
     PeronMudule,
-    ArticleTypeMudule
+    ArticleTypeMudule,
   ],
   controllers: [UtilsController],
   // controllers: [PersonController, AppController, ProductsController],

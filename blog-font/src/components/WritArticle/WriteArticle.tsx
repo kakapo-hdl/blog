@@ -8,7 +8,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { Formik } from 'formik';
 import { useEffect } from "react";
-import { getArticleById, insertArticle, updateArticle } from "../../api/service";
+import { getArticleById, getArticleTypeMap, insertArticle, updateArticle } from "../../api/service";
 import { useHistory, useParams } from "react-router";
 import { Article, Message } from "../../models/model";
 import Stack from '@mui/material/Stack';
@@ -54,8 +54,10 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 const WriteArticle = () => {
-  const [article, setArticle] = useState<Article>({})
+  const [article, setArticle] = useState<Article>({  title: '', author: '',content: '',articleTypeId:0})
   const [open, setOpen] = React.useState(false);
+  const [map, setMap] = React.useState<Array<{id:number,value:string}>>();
+
   const [message, setMessage] = React.useState<Message>({ time: 3000, message: '', type: 'info', isLoading: true, key: new Date().getTime().toString() });
 
   const showMessage = (mes: Message) => {
@@ -76,14 +78,25 @@ const WriteArticle = () => {
   const history = useHistory();
   useEffect(() => {
     async function fetchData() {
-      showMessage({ message: 'loading data...', type: 'info', isLoading: true })
-      setOpen(true)
+      showMessage({ message: 'loading data...', type: 'info', isLoading: true });
+      setOpen(true);
       const res = await getArticleById(params.key);
       if (res.status === 200)
-        setArticle(res.data);
+      if(res.data.content===null){
+        res.data.content=''
+      }
+      setArticle(res.data);
       setOpen(true);
       showMessage({ message: 'loading success!', type: 'success', isLoading: false })
     }
+    async function fetchMap() {
+      const selectMap = await getArticleTypeMap();
+      setMap(selectMap.data);
+  
+    }
+
+    fetchMap();
+    
     if (params.key === "create") {
     } else {
       fetchData();
@@ -123,6 +136,8 @@ const WriteArticle = () => {
             } else {
               try {
                 showMessage({ message: 'submitting...', type: 'info', isLoading: true });
+                console.log(values);
+                
                 const res = await insertArticle(values)
                 setArticle(res.data.data)
                 showMessage({ message: 'create success!', type: 'success', isLoading: false })
@@ -155,9 +170,9 @@ const WriteArticle = () => {
                 value={values.title}
                 onChange={handleChange}
                 size="medium"
-                InputLabelProps={{
-                  shrink: false,
-                }}
+                // InputLabelProps={{
+                //   shrink: true,
+                // }}
                 error={Boolean(errors.title)}
               />
               <br></br>
@@ -180,23 +195,17 @@ const WriteArticle = () => {
 
   
               <FormControl  style={{width:'60%'}} >
-                <InputLabel id="articleType">article type</InputLabel>
+                <InputLabel id="articleTypeId">article type</InputLabel>
                 <Select
-                  labelId="articleType"
-                  name="articleType"
-                  id="articleType"
-                  value={values.ArticleTypeId}
+                  labelId="articleTypeId"
+                  name="articleTypeId"
+                  id="articleTypeId"
+                  value={values.articleTypeId}
                   label="article type"
                   onChange={handleChange}
                   size="medium"
-                  
-                // InputLabelProps={{
-                //   shrink: true,
-                // }}
                 >
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  {map?.map(item=><MenuItem key={item.id} value={item.id}>{item.value}</MenuItem>)}
                 </Select>
               </FormControl>
 

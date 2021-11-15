@@ -6,10 +6,9 @@ import { ArticleType } from './model/ArticleType.model';
 import { ArticleService } from './service/Article.sercvice';
 import { ArticleTypeService } from './service/ArticleType.sercvice';
 @Module({
-  imports: [TypeOrmModule.forFeature([ArticleType,Article])],
+  imports: [TypeOrmModule.forFeature([ArticleType, Article])],
   providers: [ArticleTypeService],
   controllers: [ArticleTypeController],
   exports: [ArticleTypeService],
-
 })
 export class ArticleTypeMudule {}

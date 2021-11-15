@@ -48,7 +48,8 @@ export class ArticleController {
     oldArticle.author = article.author;
     oldArticle.content = article.content;
     oldArticle.title = article.title;
-    const result = await this.ArticleService.insertArticle(oldArticle);
+    oldArticle.articleTypeId = article.articleTypeId;
+    const result = await this.ArticleService.updateArticle(oldArticle);
     if (result != null) {
       return res
         .status(HttpStatus.OK)
@@ -64,11 +65,6 @@ export class ArticleController {
     const data = await this.ArticleService.getArticle();
     return data;
   }
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   const data =  this.ArticleService.getArticleById(Number.parseInt(id));
-  //   return data;
-  // }
   @Get('get')
   async getArticleById(@Query() query: { id: string }): Promise<Article> {
     const data = await this.ArticleService.getArticleById(query.id);

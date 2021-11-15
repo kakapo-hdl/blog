@@ -22,10 +22,6 @@ export class ArticleTypeController {
   constructor(
     // @Inject(forwardRef(() => ArticleTypeService))
     private readonly ArticleTypeService: ArticleTypeService,
-
-    // @Inject(forwardRef(() => ArticleService))
-    // private readonly ArticleService: ArticleService,
-
   ) {}
 
   @Post('insert')
@@ -46,16 +42,17 @@ export class ArticleTypeController {
   @Put('update')
   async updateArticleType(
     @Body() ArticleType: ArticleType,
-    @Res() res: Response ): Promise<any> {
+    @Res() res: Response): Promise<any> {
     const oldArticleType = await this.ArticleTypeService.getArticleTypeById(
       ArticleType.id.toString(),
     );
     oldArticleType.color = ArticleType.color;
     oldArticleType.description = ArticleType.description;
     oldArticleType.type = ArticleType.type;
-    const result = await this.ArticleTypeService.insertArticleType(
+    const result = await this.ArticleTypeService.updateArticleType(
       oldArticleType,
     );
+    
     if (result != null) {
       return res
         .status(HttpStatus.OK)
@@ -66,11 +63,20 @@ export class ArticleTypeController {
         .send({ mes: 'update error' });
     }
   }
+  @Get('getAllMap')
+  async getArticleTypeSelect(): Promise<any> {
+    const data = await this.ArticleTypeService.getArticleType();
+    const result: Array<{ id: number; value: string }> = [];
+    data.forEach((item) => result.push({ id: item.id, value: item.type }));
+    return result;
+  }
+
   @Get('getAll')
   async getArticleTypes(): Promise<ArticleType[]> {
     const data = await this.ArticleTypeService.getArticleType();
     return data;
   }
+
   @Get('getAllWithArticle')
   async getArticleTypesWithArticle(): Promise<ArticleType[]> {
     const data = await this.ArticleTypeService.getArticleTypeWithArticle();

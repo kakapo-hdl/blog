@@ -10,7 +10,7 @@ export class ArticleService {
   constructor(
     @InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
-  ) {}
+  ) { }
 
   async getArticle(): Promise<Article[]> {
     const articles = await getConnection()
@@ -25,7 +25,13 @@ export class ArticleService {
   }
   async updateArticle(article: Article): Promise<any> {
     article.lastUpdateTime = new Date();
-    return await this.articleRepository.update(article.id, article);
+    // return await getConnection()
+    //   .getRepository(Article)
+    //   .update({ id: article.id }, article);
+    return await this.articleRepository.save(article);
+
+
+
   }
   async DeleteArticle(id: number): Promise<any> {
     return await this.articleRepository.delete(id);
