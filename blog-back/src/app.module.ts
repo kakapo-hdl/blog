@@ -6,9 +6,16 @@ import { database } from './config/db';
 import { ArticleMudule } from './article.module';
 import { Person } from './model/person.model';
 import { Article } from './model/article.model';
+import { UtilsController } from './controller/utils.controller';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { ArticleType } from './model/articleType.model';
+import { ArticleTypeMudule } from './ArticleType.module';
 @Module({
-  // eslint-disable-next-line prettier/prettier
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..'),
+    }),
     TypeOrmModule.forRoot({
       type: 'mssql',
       host: '42.192.144.217',
@@ -16,7 +23,7 @@ import { Article } from './model/article.model';
       username: 'SA',
       password: 'nM7894561230',
       database: 'blog',
-      entities: [Article,Person],
+      entities: [Article, Person, ArticleType],
       // entities: ['src/**.entity{.ts,.js}'],
       synchronize: true,
       autoLoadEntities: true,
@@ -24,8 +31,11 @@ import { Article } from './model/article.model';
         trustServerCertificate: true,
       },
     }),
-   ArticleMudule, PeronMudule
+    ArticleMudule,
+    PeronMudule,
+    ArticleTypeMudule
   ],
+  controllers: [UtilsController],
   // controllers: [PersonController, AppController, ProductsController],
   // providers: [PersonService, AppService, ProductsService],
 })

@@ -26,14 +26,14 @@ export class Article {
   title: string;
 
   @IsNotEmpty()
-  @Column({nullable: true})
+  @Column({nullable: true,type: 'ntext'})
   author: string;
 
   @IsNotEmpty()
-  @Column({nullable: true,type: 'nvarchar',length:'Max'})
+  @Column({nullable: true  ,type: 'ntext'})
   content: string;
-
-  @Column({nullable: true})
+ 
+  @Column({nullable: false})
   createTime: Date;
 
   @Column({nullable: true})
