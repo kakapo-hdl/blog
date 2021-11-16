@@ -28,7 +28,9 @@ export class Article {
     this.lastUpdateTime = lastUpdateTime;
   }
 
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({
+    type: 'int'
+  })
   id: number;
 
   @IsNotEmpty()

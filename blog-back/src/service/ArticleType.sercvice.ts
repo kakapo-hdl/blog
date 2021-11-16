@@ -12,7 +12,7 @@ export class ArticleTypeService {
     private readonly ArticleTypeRepository: Repository<ArticleType>,
     @InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
-  ) {}
+  ) { }
 
   async getArticleType(): Promise<ArticleType[]> {
     const ArticleTypes = await getConnection()
@@ -38,9 +38,16 @@ export class ArticleTypeService {
   async getArticleTypeById(id: string): Promise<ArticleType> {
     return await this.ArticleTypeRepository.findOne(id);
   }
-  async updateArticleType(ArticleType: ArticleType): Promise<any> {
-    ArticleType.lastUpdateTime = new Date();
-    return await this.ArticleTypeRepository.update(ArticleType.id, ArticleType);
+  async updateArticleType(articleType: ArticleType): Promise<any> {
+    articleType.lastUpdateTime = new Date();
+    return await getConnection().getRepository(ArticleType).update(articleType.id,
+      {
+        type: articleType.type,
+        color: articleType.color,
+        description: articleType.description,
+        lastUpdateTime: articleType.lastUpdateTime,
+      }
+    );
   }
   async DeleteArticleType(id: number): Promise<any> {
     return await this.ArticleTypeRepository.delete(id);

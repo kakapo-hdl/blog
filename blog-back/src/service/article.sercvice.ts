@@ -25,10 +25,16 @@ export class ArticleService {
   }
   async updateArticle(article: Article): Promise<any> {
     article.lastUpdateTime = new Date();
-    // return await getConnection()
-    //   .getRepository(Article)
-    //   .update({ id: article.id }, article);
-    return await this.articleRepository.save(article);
+
+    return await this.articleRepository.update(article.id,
+      {
+        articleTypeId: article.articleTypeId,
+        title: article.title,
+        author: article.author,
+        lastUpdateTime: article.lastUpdateTime,
+        content: article.content,
+      }
+    );
 
 
 
