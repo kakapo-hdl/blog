@@ -40,14 +40,14 @@ export class ArticleTypeService {
   }
   async updateArticleType(articleType: ArticleType): Promise<any> {
     articleType.lastUpdateTime = new Date();
-    return await getConnection().getRepository(ArticleType).update(articleType.id,
-      {
+    return await getConnection()
+      .getRepository(ArticleType)
+      .update(articleType.id, {
         type: articleType.type,
         color: articleType.color,
         description: articleType.description,
         lastUpdateTime: articleType.lastUpdateTime,
-      }
-    );
+      });
   }
   async DeleteArticleType(id: number): Promise<any> {
     return await this.ArticleTypeRepository.delete(id);

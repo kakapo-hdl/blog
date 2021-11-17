@@ -26,18 +26,13 @@ export class ArticleService {
   async updateArticle(article: Article): Promise<any> {
     article.lastUpdateTime = new Date();
 
-    return await this.articleRepository.update(article.id,
-      {
-        articleTypeId: article.articleTypeId,
-        title: article.title,
-        author: article.author,
-        lastUpdateTime: article.lastUpdateTime,
-        content: article.content,
-      }
-    );
-
-
-
+    return await this.articleRepository.update(article.id, {
+      articleTypeId: article.articleTypeId,
+      title: article.title,
+      author: article.author,
+      lastUpdateTime: article.lastUpdateTime,
+      content: article.content,
+    });
   }
   async DeleteArticle(id: number): Promise<any> {
     return await this.articleRepository.delete(id);

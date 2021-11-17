@@ -40,8 +40,12 @@ const ckEditorConfig = {
     //   '|',
     //   'imageUpload',
     // ],
-    // 工具栏自动换行
+    // 工具栏自动换行   
+  
     shouldNotGroupWhenFull: true,
+  },
+  mediaEmbed: {
+    previewsInData: true
   },
   extraPlugins: [MyCustomUploadAdapterPlugin],
 };
@@ -54,9 +58,9 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 const WriteArticle = () => {
-  const [article, setArticle] = useState<Article>({  title: '', author: '',content: '',articleTypeId:0})
+  const [article, setArticle] = useState<Article>({ title: '', author: '', content: '', articleTypeId: 0 })
   const [open, setOpen] = React.useState(false);
-  const [map, setMap] = React.useState<Array<{id:number,value:string}>>();
+  const [map, setMap] = React.useState<Array<{ id: number, value: string, color: string }>>();
 
   const [message, setMessage] = React.useState<Message>({ time: 3000, message: '', type: 'info', isLoading: true, key: new Date().getTime().toString() });
 
@@ -82,9 +86,9 @@ const WriteArticle = () => {
       setOpen(true);
       const res = await getArticleById(params.key);
       if (res.status === 200)
-      if(res.data.content===null){
-        res.data.content=''
-      }
+        if (res.data.content === null) {
+          res.data.content = ''
+        }
       setArticle(res.data);
       setOpen(true);
       showMessage({ message: 'loading success!', type: 'success', isLoading: false })
@@ -92,11 +96,11 @@ const WriteArticle = () => {
     async function fetchMap() {
       const selectMap = await getArticleTypeMap();
       setMap(selectMap.data);
-  
+
     }
 
     fetchMap();
-    
+
     if (params.key === "create") {
     } else {
       fetchData();
@@ -137,7 +141,7 @@ const WriteArticle = () => {
               try {
                 showMessage({ message: 'submitting...', type: 'info', isLoading: true });
                 console.log(values);
-                
+
                 const res = await insertArticle(values)
                 setArticle(res.data.data)
                 showMessage({ message: 'create success!', type: 'success', isLoading: false })
@@ -179,7 +183,7 @@ const WriteArticle = () => {
               <br></br>
 
               <TextField
-                style={{width:'38%',marginRight:'2%'}}
+                style={{ width: '38%', marginRight: '2%' }}
                 variant="outlined"
                 id="author"
                 name="author"
@@ -193,8 +197,8 @@ const WriteArticle = () => {
                 error={Boolean(errors.author)}
               />
 
-  
-              <FormControl  style={{width:'60%'}} >
+
+              <FormControl style={{ width: '60%' }} >
                 <InputLabel id="articleTypeId">article type</InputLabel>
                 <Select
                   labelId="articleTypeId"
@@ -205,7 +209,7 @@ const WriteArticle = () => {
                   onChange={handleChange}
                   size="medium"
                 >
-                  {map?.map(item=><MenuItem key={item.id} value={item.id}>{item.value}</MenuItem>)}
+                  {map?.map(item => <MenuItem key={item.id} style={{ color: item.color }} value={item.id}>{item.value}</MenuItem>)}
                 </Select>
               </FormControl>
 

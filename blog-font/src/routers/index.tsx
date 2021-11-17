@@ -9,6 +9,7 @@ import {
 const HomePage = lazy(async () => import('../views/HomePage'));
 const WriteArticlePage = lazy(async () => import('../views/WriteArticlePage'));
 const ManagePage = lazy(async () => import('../views/ManagePage'));
+const ArticleDispaly = lazy(async () => import('../views/ArticleDispaly'));
 
 const App = () => {
   return (
@@ -19,6 +20,8 @@ const App = () => {
           <Route path="/ManagePage" component={ManagePage}>
           </Route>
           <Route path="/WriteArticle/:key" component={WriteArticlePage}>
+          </Route>
+          <Route path="/ArticleDispaly/:key" component={ArticleDispaly}>
           </Route>
           <Redirect from="/" to="/Home" />
 

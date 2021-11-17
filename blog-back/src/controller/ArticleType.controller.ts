@@ -52,7 +52,7 @@ export class ArticleTypeController {
     const result = await this.ArticleTypeService.updateArticleType(
       oldArticleType,
     );
-    
+
     if (result != null) {
       return res
         .status(HttpStatus.OK)
@@ -66,8 +66,10 @@ export class ArticleTypeController {
   @Get('getAllMap')
   async getArticleTypeSelect(): Promise<any> {
     const data = await this.ArticleTypeService.getArticleType();
-    const result: Array<{ id: number; value: string }> = [];
-    data.forEach((item) => result.push({ id: item.id, value: item.type }));
+    const result: Array<{ id: number; value: string; color: string }> = [];
+    data.forEach((item) =>
+      result.push({ id: item.id, value: item.type, color: item.color }),
+    );
     return result;
   }
 
