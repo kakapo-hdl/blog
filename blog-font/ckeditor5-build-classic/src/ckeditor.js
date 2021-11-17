@@ -46,6 +46,7 @@ import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
 import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
 import HtmlComment from '@ckeditor/ckeditor5-html-support/src/htmlcomment';
 import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
+import IndentBlock from '@ckeditor/ckeditor5-indent/src/indentblock';
 
 export default class ClassicEditor extends ClassicEditorBase { }
 
@@ -53,7 +54,7 @@ export default class ClassicEditor extends ClassicEditorBase { }
 // Plugins to include in the build.
 ClassicEditor.builtinPlugins = [
 	SourceEditing,
-	Font, 
+	Font,
 	Highlight,
 	FindAndReplace,
 	CodeBlock,
@@ -90,7 +91,8 @@ ClassicEditor.builtinPlugins = [
 	ImageResizeEditing,
 	ImageResizeHandles,
 	RemoveFormat,
-	Alignment
+	Alignment,
+	IndentBlock
 ];
 
 const fontColorConfig = {
@@ -318,13 +320,17 @@ ClassicEditor.defaultConfig = {
 			'removeFormat',
 			'alignment',
 			'sourceEditing',
-			 'font'
+			'font'
 		]
 	},
+	indentBlock: {
+		offset: 1,
+		unit: 'em'
+	},
 	alignment,
-  fontColorConfig,
+	fontColorConfig,
 	fontBackgroundColorConfig,
-	language: 'en'
+	language: 'zh-cn'
 	// This value must be kept in sync with the language defined in webpack.config.js.
 
 };
