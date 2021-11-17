@@ -1,9 +1,10 @@
 import { CardActionArea, CardContent, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { getArticle } from "../../api/service";
-import { Article } from "../../models/model";
+import { Article, Message } from "../../models/model";
 import { ListCard } from "./ComponentStyle";
 import { useHistory } from 'react-router-dom'
+import { GrobalContext } from "../../views/IndexPage";
 export interface Props {
   // name?: String;
   // enthusiasmLevel: number;
@@ -13,10 +14,11 @@ export interface Props {
 
 const ListArticle = () => {
   const [articles,setArticles] = useState<Array<Article>>([])
-  
+  const   showMessage: (mes: Message)=>void =useContext(GrobalContext);
 
   useEffect( ()=>{
     async function fetchData() {
+      showMessage({message:'loadding',type:'info'})
       const response = await getArticle();
       setArticles(response.data);     
     }

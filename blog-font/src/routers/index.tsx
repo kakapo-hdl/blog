@@ -1,4 +1,3 @@
-import React from "react";
 import { lazy } from "react";
 import {
   BrowserRouter as Router,
@@ -24,10 +23,9 @@ const App = () => {
           <Route path="/ArticleDisplay/:key" component={ArticleDisplay}>
           </Route>
           <Redirect from="/" to="/Home" />
-
         </Switch>
     </Router>
   );
 }
 
-export default App
+export default App;

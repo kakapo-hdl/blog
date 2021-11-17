@@ -1,7 +1,6 @@
 // import { Footer } from "antd/lib/layout/layout";
 import React from "react";
-import { Header, HeadConetnt } from "../components/Header/HeaderStyles"
-import { Box, Container, Grid } from "@material-ui/core";
+import { Container, Grid } from "@material-ui/core";
 import Carousel from "../components/Crousel/Crousel";
 import ListArticle from "../components/ListArticle/ListArticle";
 

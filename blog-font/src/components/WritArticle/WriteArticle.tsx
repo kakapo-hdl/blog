@@ -1,5 +1,5 @@
 import { CardActionArea, CardContent, CircularProgress, TextField, Typography } from "@material-ui/core";
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { ListCard } from "./Style";
 // TypeScript users only add this code
 import { BaseEditor, createEditor, Descendant } from 'slate'
@@ -11,13 +11,10 @@ import { useEffect } from "react";
 import { getArticleById, getArticleTypeMap, insertArticle, updateArticle } from "../../api/service";
 import { useHistory, useParams } from "react-router";
 import { Article, Message } from "../../models/model";
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import axios from "axios";
 import { MyCustomUploadAdapterPlugin } from "./upload";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { GrobalContext } from "../../views/IndexPage";
 
 const ckEditorConfig = {
   language: 'zh-cn',
@@ -51,46 +48,25 @@ const ckEditorConfig = {
 };
 
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref,
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+
 const WriteArticle = () => {
   const [article, setArticle] = useState<Article>({ title: '', author: '', content: '', articleTypeId: 0 })
-  const [open, setOpen] = React.useState(false);
   const [map, setMap] = React.useState<Array<{ id: number, value: string, color: string }>>();
 
-  const [message, setMessage] = React.useState<Message>({ time: 3000, message: '', type: 'info', isLoading: true, key: new Date().getTime().toString() });
+  const   showMessage: (mes: Message)=>void =useContext(GrobalContext);
 
-  const showMessage = (mes: Message) => {
-    mes.key = new Date().getTime().toString();
-    setMessage(mes);
-  }
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpen(false);
-  };
+   
   const params: any = useParams();
   const history = useHistory();
   useEffect(() => {
     async function fetchData() {
       showMessage({ message: 'loading data...', type: 'info', isLoading: true });
-      setOpen(true);
       const res = await getArticleById(params.key);
       if (res.status === 200)
         if (res.data.content === null) {
           res.data.content = ''
         }
       setArticle(res.data);
-      setOpen(true);
       showMessage({ message: 'loading success!', type: 'success', isLoading: false })
     }
     async function fetchMap() {
@@ -111,19 +87,6 @@ const WriteArticle = () => {
   return (
     <>
       <div className="App">
-        <Stack spacing={3} sx={{ width: '100%' }}>
-          <Snackbar anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }} open={open} autoHideDuration={message.time === undefined ? 3000 : message.time}
-            key={message ? message.key : undefined}
-            onClose={handleClose}>
-            <Alert onClose={handleClose} severity={message?.type} sx={{ width: '100%', minWidth: 300 }}>
-              <span style={{ fontSize: '1rem' }}>{message?.message}</span> {message?.isLoading ? <CircularProgress style={{ float: "right" }} size={20} /> : null}
-            </Alert>
-          </Snackbar>
-
-        </Stack>
         <Formik
           enableReinitialize
           initialValues={article}
@@ -232,7 +195,7 @@ const WriteArticle = () => {
               />
               <br></br>
 
-              <Button variant='contained' color="primary" type="submit" onClick={handleClick}>
+              <Button variant='contained' color="primary" type="submit">
                 {values.id === undefined ? "Submit" : "Update"}
               </Button>
             </form>

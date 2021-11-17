@@ -1,11 +1,11 @@
 import ReactDOM from 'react-dom';
 import GlobalStyle from './global';
-import Index from './views/IndexPage';
+import {IndexPage} from './views/IndexPage';
 
 ReactDOM.render(
   <>
     <GlobalStyle></GlobalStyle>
-    <Index />
+    <IndexPage />
   </>
   ,
   document.getElementById('root') as HTMLElement

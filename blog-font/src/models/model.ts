@@ -20,8 +20,8 @@ export interface ArticleType {
 
 
 export interface Message {
-  message?: string,
-  type?: "success" | "info" | "warning" | "error",
+  message: string,
+  type: "success" | "info" | "warning" | "error",
   isLoading?: boolean,
   time?:number,
   key?:string,
