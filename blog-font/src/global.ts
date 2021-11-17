@@ -15,7 +15,7 @@ a { color:#555; text-decoration:none; }
 
 a:hover { text-decoration:underline; }
 
-img { border:none; }
+img { border:none; width:100% }
 
 /* ol,ul,li { list-style:none; } */
 

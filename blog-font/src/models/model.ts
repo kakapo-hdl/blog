@@ -14,7 +14,8 @@ export interface ArticleType {
   color?: string,
   description?: string,
   createTime?: Date,
-  lastUpdateTime?: Date
+  lastUpdateTime?: Date,
+  articles?: Article[]
 }
 
 

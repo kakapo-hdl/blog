@@ -44,12 +44,15 @@ import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandrepl
 import Highlight from '@ckeditor/ckeditor5-highlight/src/highlight';
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
 import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
+import HtmlComment from '@ckeditor/ckeditor5-html-support/src/htmlcomment';
+import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
 
 // Plugins to include in the build.
 ClassicEditor.builtinPlugins = [
+	SourceEditing,
 	// Font, 
 	Highlight,
 	FindAndReplace,
@@ -255,6 +258,7 @@ ClassicEditor.defaultConfig = {
 			'highlight',
 			'removeFormat',
 			'alignment',
+			'sourceEditing'
 			//  'font'
 		]
 	},

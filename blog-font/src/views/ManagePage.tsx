@@ -22,12 +22,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Switch from '@mui/material/Switch';
 import CloseIcon from '@mui/icons-material/Close';
 import CircleIcon from '@mui/icons-material/Circle';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -37,9 +31,11 @@ import * as yup from 'yup';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { Alert, Slide, Stack } from "@mui/material";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
-import { ArticleType, Message } from "../models/model";
-import { getArticleType, insertArticleType,updateArticleType } from "../api/service";
-import moment  from 'moment'
+import { Article, ArticleType, Message } from "../models/model";
+import { getArticleType, getArticleTypeWithArticle, insertArticleType, updateArticleType } from "../api/service";
+import moment from 'moment'
+import { useHistory } from "react-router";
+import RemoveRedEyeSharpIcon from '@mui/icons-material/RemoveRedEyeSharp';
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
@@ -96,10 +92,15 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
 
 
 
-const Row: React.FC<({ row: ArticleType,editArticleType: (value:ArticleType)=>void })> = (props) => {
+const Row: React.FC<({ row: ArticleType, editArticleType: (value: ArticleType) => void })> = (props) => {
   const [open, setOpen] = React.useState(false);
   const [openConfirm, setOpenConfirm] = React.useState(false);
-  const { row,editArticleType } = props;
+  const history = useHistory();
+  const { row, editArticleType } = props;
+
+  //   const handlePush = (key?: number) => {  
+  //   history.push(`/WriteArticle/${key}`);
+  //  } 
   const handleClickOpen = () => {
     setOpenConfirm(true);
   };
@@ -115,7 +116,7 @@ const Row: React.FC<({ row: ArticleType,editArticleType: (value:ArticleType)=>vo
       <React.Fragment>
         <StyledTableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
 
-          <TableCell align="right">
+          <TableCell align="center">
             <IconButton
               aria-label="expand row"
               size="small"
@@ -126,12 +127,12 @@ const Row: React.FC<({ row: ArticleType,editArticleType: (value:ArticleType)=>vo
             </IconButton>
           </TableCell>
           <TableCell align="center">{row.id}</TableCell>
-          <TableCell  align="left">{row.type}</TableCell>
-          <TableCell component="th" scope="row">{row.description}</TableCell>
+          <TableCell align="left">{row.type}</TableCell>
+          <TableCell align="left">{row.description}</TableCell>
           <TableCell align="center">{row.color}</TableCell>
 
-          <TableCell align="center">{ moment(row.createTime).format('YYYY-MM-DD ') }</TableCell>
-          <TableCell align="center"> { moment(row.lastUpdateTime).format('YYYY-MM-DD ')}</TableCell>
+          <TableCell align="center">{moment(row.createTime).format('YYYY-MM-DD ')}</TableCell>
+          <TableCell align="center"> {moment(row.lastUpdateTime).format('YYYY-MM-DD ')}</TableCell>
           <TableCell align="center" >
             <IconButton
               size="small"
@@ -140,7 +141,7 @@ const Row: React.FC<({ row: ArticleType,editArticleType: (value:ArticleType)=>vo
               <DeleteForeverIcon />
             </IconButton>
             <IconButton
-              onClick={()=>editArticleType(row)}
+              onClick={() => editArticleType(row)}
               color="primary"
               size="small">
               <EditTwoToneIcon />
@@ -149,33 +150,62 @@ const Row: React.FC<({ row: ArticleType,editArticleType: (value:ArticleType)=>vo
         </StyledTableRow>
 
         <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0, width: '100%' }} colSpan={6}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <Typography variant="body1" gutterBottom component="div">Aticle</Typography>
+                <Typography variant="h6" gutterBottom component="div">Aticle</Typography>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Date</TableCell>
-                      <TableCell>Customer</TableCell>
-                      <TableCell align="right">Amount</TableCell>
-                      <TableCell align="right">Total price ($)</TableCell>
+                      <TableCell >id</TableCell>
+                      <TableCell>Title</TableCell>
+                      <TableCell>Author</TableCell>
+                      <TableCell align="center">Create Time</TableCell>
+                      <TableCell align="center">LastUpdate Time</TableCell>
+                      <TableCell align="center">Action</TableCell>
+
                     </TableRow>
                   </TableHead>
-                  {/* <TableBody>
-                    {row.history.map((historyRow: any) => (
-                      <TableRow key={historyRow.date}>
-                        <TableCell component="th" scope="row">
-                          {historyRow.date}
+
+                  <TableBody>
+                    {row.articles?.map((row: Article) => (
+                      <TableRow key={row.id}>
+                        <TableCell>{row.id}</TableCell>
+                        <TableCell>{row.title}</TableCell>
+                        <TableCell>{row.author}</TableCell>
+                        <TableCell align="center" >
+                          {moment(row.createTime).format('YYYY-MM-DD')}
                         </TableCell>
-                        <TableCell>{historyRow.customerId}</TableCell>
-                        <TableCell align="right">{historyRow.amount}</TableCell>
-                        <TableCell align="right">
-                          {Math.round(historyRow.amount * row.price * 100) / 100}
+                        <TableCell align="center">
+                          {moment(row.lastUpdateTime).format('YYYY-MM-DD')}
+                        </TableCell>
+                        <TableCell align="center" >
+                          <IconButton
+                            size="small"
+                            color="error"
+                          >
+                            <DeleteForeverIcon />
+                          </IconButton>
+
+                          <IconButton
+                            onClick={() => history.push(`/WriteArticle/${row.id}`)}
+                            color="primary"
+                            size="small">
+                            <EditTwoToneIcon />
+                          </IconButton>
+
+                          <IconButton
+                            onClick={() => history.push(`/ArticleDisplay/${row.id}`)}
+                            color="primary"
+                            size="small">
+                            <RemoveRedEyeSharpIcon />
+                          </IconButton>
+
                         </TableCell>
                       </TableRow>
+
                     ))}
-                  </TableBody> */}
+                  </TableBody>
                 </Table>
               </Box>
             </Collapse>
@@ -205,45 +235,32 @@ const Row: React.FC<({ row: ArticleType,editArticleType: (value:ArticleType)=>vo
   )
 }
 
-
-// function createData(article: ArticleType) {
-//   return article;
-// }
-
-
-// const rows = [
-//   createData({ id: 1, type: '历史', color: 'blue', description: '没什么sdfsdfsdfsd', createTime: new Date(), lastUpdateTime: new Date() }),
-//   createData({ id: 2, type: '历史sdf', color: 'blue', description: '没什么sdfsdfsdf', createTime: new Date(), lastUpdateTime: new Date() }),
-
-// ];
-
-
 const ManagePage: React.FC<any> = (props) => {
   const [open, setOpen] = React.useState(false);
   const [articleTypes, setArticleTypes] = React.useState<Array<ArticleType>>([]);
   const [openDlog, setOpenDlog] = React.useState(false);
   const [articleType, setArticleType] = React.useState<ArticleType>({});
-  const [message, setMessage] = React.useState<Message>({ time: 3000, message: '', type: 'info', isLoading: true, key: new Date().getTime().toString()});
+  const [message, setMessage] = React.useState<Message>({ time: 3000, message: '', type: 'info', isLoading: true, key: new Date().getTime().toString() });
   const myFormRef = React.useRef<FormikProps<any>>(null);
-  const articleInit: ArticleType = {type:'',color:'',description:''};
-  
-  React.useEffect(()=>{
+  const articleInit: ArticleType = { type: '', color: '', description: '' };
+
+  React.useEffect(() => {
     loadFormData();
-  },[]);
-  const loadFormData = async ()=>{
+  }, []);
+  const loadFormData = async () => {
     try {
       showMessage({ message: 'init...', type: 'info', isLoading: true });
-      const res = await getArticleType();        
-      if(res.status === 200) {
+      const res = await getArticleTypeWithArticle();
+      if (res.status === 200) {
         setArticleTypes(res.data)
         showMessage({ message: 'loading success', type: 'success', isLoading: false });
-      }else{
+      } else {
         showMessage({ message: res.data.msg, type: 'error', isLoading: false });
       }
     } catch (error) {
       showMessage({ message: 'Init error', type: 'error', isLoading: false });
     }
-    
+
   }
   const showMessage = (mes: Message) => {
     mes.key = new Date().getTime().toString();
@@ -264,7 +281,7 @@ const ManagePage: React.FC<any> = (props) => {
   const createArticleType = () => {
     handleClickOpen();
   };
-  const editArticleType = (value:ArticleType) => {
+  const editArticleType = (value: ArticleType) => {
     setArticleType(value);
     handleClickOpen();
   };
@@ -284,17 +301,17 @@ const ManagePage: React.FC<any> = (props) => {
             <Table aria-label="collapsible table">
               <TableHead>
                 <StyledTableRow>
-                  <StyledTableCell width={50} />
-                  <StyledTableCell width={50} align="center">序号</StyledTableCell>
-                  <StyledTableCell>文章类型</StyledTableCell>
-                  <StyledTableCell  align="center">描述</StyledTableCell>
-                  <StyledTableCell width={100} align="center">类型颜色&nbsp;</StyledTableCell>
-                  <StyledTableCell width={150} align="center">创建日期</StyledTableCell>
-                  <StyledTableCell width={150} align="center">更新日期</StyledTableCell>
-                  <StyledTableCell width={100} align="center">
+                  <StyledTableCell width={20} />
+                  <StyledTableCell style={{ minWidth: 30 }}  align="center">序号</StyledTableCell>
+                  <StyledTableCell style={{ minWidth: 200 }}>文章类型</StyledTableCell>
+                  <StyledTableCell  style={{ minWidth: 200 }} align="center">描述</StyledTableCell>
+                  <StyledTableCell  style={{ minWidth: 70 }} align="center">类型颜色</StyledTableCell>
+                  <StyledTableCell style={{ minWidth: 70 }} align="center">创建日期</StyledTableCell>
+                  <StyledTableCell style={{ minWidth: 70 }} align="center">更新日期</StyledTableCell>
+                  <StyledTableCell style={{ minWidth: 70 }} align="center">
                     操作
-                    <IconButton  onClick={createArticleType} color="success" size="small">
-                      <AddOutlinedIcon fontSize='medium'/>
+                    <IconButton onClick={createArticleType} color="success" size="small">
+                      <AddOutlinedIcon fontSize='medium' />
                     </IconButton>
                   </StyledTableCell>
 
@@ -322,7 +339,7 @@ const ManagePage: React.FC<any> = (props) => {
         onClose={(e, reson) => handleClose(e, reson)}
       >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          {typeof articleType.id==='undefined' ? ' Create': 'Update'}   Article Type
+          {typeof articleType.id === 'undefined' ? ' Create' : 'Update'}   Article Type
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <Formik
@@ -331,7 +348,7 @@ const ManagePage: React.FC<any> = (props) => {
             initialValues={articleType}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
-              if(typeof articleType.id==='undefined'){
+              if (typeof articleType.id === 'undefined') {
                 try {
                   showMessage({ message: 'submitting...', type: 'info', isLoading: true });
                   await insertArticleType(values);
@@ -342,7 +359,7 @@ const ManagePage: React.FC<any> = (props) => {
                 catch (error) {
                   showMessage({ message: 'create fail!', type: 'error', isLoading: false })
                 }
-              }else{
+              } else {
                 try {
                   showMessage({ message: 'updating...', type: 'info', isLoading: true });
                   await updateArticleType(values);
@@ -355,7 +372,7 @@ const ManagePage: React.FC<any> = (props) => {
                   showMessage({ message: 'update fail!', type: 'error', isLoading: false })
                 }
               }
-              
+
             }
             }
           >
@@ -438,18 +455,18 @@ const ManagePage: React.FC<any> = (props) => {
       </Dialog>
 
       <Stack spacing={3} sx={{ width: '100%' }}>
-          <Snackbar anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }} open={openDlog} autoHideDuration={message.time === undefined ? 3000 : message.time}
-            key={message ? message.key : undefined}
-            onClose={handleCloseDlog}>
-            <Alert onClose={handleCloseDlog} severity={message?.type} sx={{ width: '100%', minWidth: 300 }}>
-              <span style={{ fontSize: '1rem' }}>{message?.message}</span> {message?.isLoading ? <CircularProgress style={{ float: "right" }} size={20} /> : null}
-            </Alert>
-          </Snackbar>
+        <Snackbar anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }} open={openDlog} autoHideDuration={message.time === undefined ? 3000 : message.time}
+          key={message ? message.key : undefined}
+          onClose={handleCloseDlog}>
+          <Alert onClose={handleCloseDlog} severity={message?.type} sx={{ width: '100%', minWidth: 300 }}>
+            <span style={{ fontSize: '1rem' }}>{message?.message}</span> {message?.isLoading ? <CircularProgress style={{ float: "right" }} size={20} /> : null}
+          </Alert>
+        </Snackbar>
 
-        </Stack>
+      </Stack>
     </Container>
 
   );
