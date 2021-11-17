@@ -40,20 +40,20 @@ import Subscript from '@ckeditor/ckeditor5-basic-styles/src/subscript';
 import Superscript from '@ckeditor/ckeditor5-basic-styles/src/superscript';
 import CodeBlock from '@ckeditor/ckeditor5-code-block/src/codeblock';
 import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace';
-// import Font from '@ckeditor/ckeditor5-font/src/font';
+import Font from '@ckeditor/ckeditor5-font/src/font';
 import Highlight from '@ckeditor/ckeditor5-highlight/src/highlight';
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
 import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
 import HtmlComment from '@ckeditor/ckeditor5-html-support/src/htmlcomment';
 import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
 
-export default class ClassicEditor extends ClassicEditorBase {}
+export default class ClassicEditor extends ClassicEditorBase { }
 
 
 // Plugins to include in the build.
 ClassicEditor.builtinPlugins = [
 	SourceEditing,
-	// Font, 
+	Font, 
 	Highlight,
 	FindAndReplace,
 	CodeBlock,
@@ -223,23 +223,82 @@ const fontBackgroundColorConfig = {
 		}
 	]
 };
-	
+
+const highlight = {
+	options: [
+		{ model: 'yellowMarker', class: 'marker-yellow', title: 'Yellow Marker', color: 'var(--ck-highlight-marker-yellow)', type: 'marker' },
+		{ model: 'greenMarker', class: 'marker-green', title: 'Green marker', color: 'var(--ck-highlight-marker-green)', type: 'marker' },
+		{ model: 'pinkMarker', class: 'marker-pink', title: 'Pink marker', color: 'var(--ck-highlight-marker-pink)', type: 'marker' },
+		{ model: 'blueMarker', class: 'marker-blue', title: 'Blue marker', color: 'var(--ck-highlight-marker-blue)', type: 'marker' },
+		{ model: 'redPen', class: 'pen-red', title: 'Red pen', color: 'var(--ck-highlight-pen-red)', type: 'pen' },
+		{ model: 'greenPen', class: 'pen-green', title: 'Green pen', color: 'var(--ck-highlight-pen-green)', type: 'pen' }
+	]
+}
+
+const fontSize = {
+	options: [
+		9,
+		11,
+		13,
+		'default',
+		17,
+		19,
+		21
+	]
+}
+
+const fontFamily = {
+	options: [
+		'default',
+		'Arial, Helvetica, sans-serif',
+		'Courier New, Courier, monospace',
+		'Georgia, serif',
+		'Lucida Sans Unicode, Lucida Grande, sans-serif',
+		'Tahoma, Geneva, sans-serif',
+		'Times New Roman, Times, serif',
+		'Trebuchet MS, Helvetica, sans-serif',
+		'Verdana, Geneva, sans-serif']
+}
+const image = {
+	toolbar: [
+		'imageStyle:inline',
+		'imageStyle:block',
+		'imageStyle:side',
+		'|',
+		'toggleImageCaption',
+		'imageTextAlternative'
+	]
+}
+
+const table = {
+	contentToolbar: [
+		'tableColumn',
+		'tableRow',
+		'mergeTableCells'
+	]
+}
+const alignment = {
+	options: [
+		{ name: 'left', className: 'my-align-left' },
+		{ name: 'center', className: 'my-align-center' },
+		{ name: 'right', className: 'my-align-right' }
+	]
+}
 // Editor configuration.
 ClassicEditor.defaultConfig = {
-
 	toolbar: {
 		items: [
 			'heading',
 			'|',
-			'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor',  
+			'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor',
 			'|',
 			'bold',
 			'italic',
 			'link',
 			'Underline',
 			'Strikethrough',
-			// 'code',
-			// 'subscript',
+			'code',
+			'subscript',
 			'codeBlock',
 			'superscript',
 			'bulletedList',
@@ -258,68 +317,14 @@ ClassicEditor.defaultConfig = {
 			'highlight',
 			'removeFormat',
 			'alignment',
-			'sourceEditing'
-			//  'font'
+			'sourceEditing',
+			 'font'
 		]
 	},
-	alignment: {
-		options: [
-				{ name: 'left', className: 'my-align-left' },
-				{ name: 'right', className: 'my-align-right' }
-		]
-},
-	highlight:{
-		options: [
-			{ model: 'yellowMarker', class: 'marker-yellow', title: 'Yellow Marker', color: 'var(--ck-highlight-marker-yellow)', type: 'marker' },
-			{ model: 'greenMarker', class: 'marker-green', title: 'Green marker', color: 'var(--ck-highlight-marker-green)', type: 'marker' },
-			{ model: 'pinkMarker', class: 'marker-pink', title: 'Pink marker', color: 'var(--ck-highlight-marker-pink)', type: 'marker' },
-			{ model: 'blueMarker', class: 'marker-blue', title: 'Blue marker', color: 'var(--ck-highlight-marker-blue)', type: 'marker' },
-			{ model: 'redPen', class: 'pen-red', title: 'Red pen', color: 'var(--ck-highlight-pen-red)', type: 'pen' },
-			{ model: 'greenPen', class: 'pen-green', title: 'Green pen', color: 'var(--ck-highlight-pen-green)', type: 'pen' }
-	]},
-	fontSize: {
-		options: [
-				9,
-				11,
-				13,
-				'default',
-				17,
-				19,
-				21
-		]
-},
-
-fontColorConfig,
-fontBackgroundColorConfig,
-	fontFamily: {
-		options: [
-			'default',
-			'Arial, Helvetica, sans-serif',
-			'Courier New, Courier, monospace',
-			'Georgia, serif',
-			'Lucida Sans Unicode, Lucida Grande, sans-serif',
-			'Tahoma, Geneva, sans-serif',
-			'Times New Roman, Times, serif',
-			'Trebuchet MS, Helvetica, sans-serif',
-			'Verdana, Geneva, sans-serif'	]
-},
-	image: {
-		toolbar: [
-			'imageStyle:inline',
-			'imageStyle:block',
-			'imageStyle:side',
-			'|',
-			'toggleImageCaption',
-			'imageTextAlternative'
-		]
-	},
-	table: {
-		contentToolbar: [
-			'tableColumn',
-			'tableRow',
-			'mergeTableCells'
-		]
-	},
-	// This value must be kept in sync with the language defined in webpack.config.js.
+	alignment,
+  fontColorConfig,
+	fontBackgroundColorConfig,
 	language: 'en'
+	// This value must be kept in sync with the language defined in webpack.config.js.
+
 };
