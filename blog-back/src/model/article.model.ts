@@ -15,7 +15,7 @@ export class Article {
     articleTypeId?: number,
     title?: string,
     description?: string,
-    isCrouselArticle?: string,
+    isCrouselArticle?: boolean,
     imageUrl?: string,
     author?: string,
     content?: string,
@@ -39,32 +39,32 @@ export class Article {
   })
   id: number;
 
-  @IsNotEmpty()
+  //@IsNotEmpty()
   @Column({ nullable: true })
   @JoinColumn({ name: 'articleTypeId' })
   articleTypeId: number;
 
-  @IsNotEmpty()
+  //@IsNotEmpty()
   @Column({ nullable: true, type: 'nvarchar' })
   title: string;
 
-  @IsNotEmpty()
+  //@IsNotEmpty()
   @Column({ nullable: true, type: 'nvarchar' })
   description: string;
 
-  @IsNotEmpty()
+  //@IsNotEmpty()
   @Column({ nullable: true, type: 'bit', default: false })
-  isCrouselArticle: string;
+  isCrouselArticle: boolean;
 
-  @IsNotEmpty()
+  // @IsNotEmpty(false)
   @Column({ nullable: true, type: 'nvarchar', length: 1000 })
   imageUrl: string;
 
-  @IsNotEmpty()
+  //@IsNotEmpty()
   @Column({ nullable: true, type: 'nvarchar' })
   author: string;
 
-  @IsNotEmpty()
+  //@IsNotEmpty()
   @Column({ nullable: true, type: 'ntext' })
   content: string;
 

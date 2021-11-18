@@ -25,13 +25,16 @@ export class ArticleService {
   }
   async updateArticle(article: Article): Promise<any> {
     article.lastUpdateTime = new Date();
-
+  
     return await this.articleRepository.update(article.id, {
       articleTypeId: article.articleTypeId,
       title: article.title,
       author: article.author,
       lastUpdateTime: article.lastUpdateTime,
       content: article.content,
+      isCrouselArticle: article.isCrouselArticle,
+      imageUrl: article.imageUrl,
+      description: article.description
     });
   }
   async DeleteArticle(id: number): Promise<any> {
@@ -39,7 +42,7 @@ export class ArticleService {
   }
   async insertArticle(article: Article): Promise<Article> {
     article.createTime = new Date();
-    article.lastUpdateTime = new Date();
+    article.lastUpdateTime = new Date();    
     return await this.articleRepository.save(article);
   }
 }

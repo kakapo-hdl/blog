@@ -47,10 +47,9 @@ const IndexPage: React.FC<(IndexPageProps)> = (props) => {
       <GrobalContext.Provider
         value={showMessage}
       >
-
         <App></App>
 
-  
+
       </GrobalContext.Provider>
 
       <Stack spacing={3} sx={{ width: '100%' }}>

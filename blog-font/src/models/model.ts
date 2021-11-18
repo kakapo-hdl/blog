@@ -3,6 +3,9 @@ export interface Article {
   articleTypeId?:number
   title?: string,
   author?: string,
+  description?: string,
+  isCrouselArticle?: boolean,
+  imageUrl?: string,
   content?: string,
   createTime?: Date,
   lastUpdateTime?: Date

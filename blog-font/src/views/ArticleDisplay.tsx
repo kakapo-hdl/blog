@@ -1,22 +1,12 @@
-import { CardActionArea, CardContent, CircularProgress, Container, Grid, TextField, Typography } from "@material-ui/core";
+import {Container, Grid, TextField, Typography } from "@material-ui/core";
 import React, { useMemo, useState } from "react";
 // TypeScript users only add this code
-import { BaseEditor, createEditor, Descendant } from 'slate'
-import { Editable, ReactEditor, Slate, withReact } from 'slate-react'
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { Formik } from 'formik';
 import { useEffect } from "react";
-import { useHistory, useParams } from "react-router";
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import axios from "axios";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { useParams } from "react-router";
 import { getArticleById } from "../api/service";
 import { Article } from "../models/model";
 import moment from "moment";
+import ReactHtmlParser from '@types/react-html-parser';
 
 
 
@@ -28,8 +18,14 @@ const ArticleDisplay = () => {
   useEffect(() => {
     fetchMap();
   }, [])
+
+  useEffect(() => {
+    fetchMap();
+  }, [])
   const fetchMap = async () => {
     const res = await getArticleById(params.key);
+    console.log(ReactHtmlParser(res.data.content));
+    
     setArticle(res.data)
   }
   return (

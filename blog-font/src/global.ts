@@ -11,15 +11,15 @@ td,th,caption { font-size:14px; }
 
 /* address, caption, cite, code, dfn, em, strong, th, var { font-style:normal; font-weight:normal;} */
 
-a { color:#555; text-decoration:none; }
+/* a { color:#555; text-decoration:none; }
 
 a:hover { text-decoration:underline; }
 
-img { border:none; width:100% }
+img { border:none; width:100% } */
 
 /* ol,ul,li { list-style:none; } */
 
-input, textarea, select, button { font:14px "Arial","Microsoft YaHei","黑体","宋体",sans-serif; }
+/* input, textarea, select, button { font:14px "Arial","Microsoft YaHei","黑体","宋体",sans-serif; }
 
 table { border-collapse:collapse; }
 
@@ -27,11 +27,11 @@ html {overflow-y: scroll;}
 
 .clearfix:after {content: "."; display: block; height:0; clear:both; visibility: hidden;}
 
-.clearfix { *zoom:1; }
+.clearfix { *zoom:1; } */
 
 /*公共类*/
 
- .fl { float:left}
+ /* .fl { float:left}
 
 .fr {float:right}
 
@@ -41,7 +41,7 @@ html {overflow-y: scroll;}
 
 .ar {text-align:right}
 
-.hide {display:none}
+.hide {display:none} */
 .MuiAlert-message{
   width: 100% !important;
 }

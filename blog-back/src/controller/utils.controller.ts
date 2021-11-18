@@ -8,11 +8,14 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { createWriteStream } from 'fs';
+import { createWriteStream, existsSync, mkdirSync } from 'fs';
 import { networkInterfaces } from 'os';
+
+import { resolve } from 'path';
+
 import { join } from 'path/posix';
 import { Response } from 'express';
-import { getIPAdress, Port } from 'src/constants/constants';
+import { getIPAdress, Port, writeFileToPublic } from 'src/constants/constants';
 
 // import { ProductsService } from 'src/service/product.sercvice';
 
@@ -36,22 +39,19 @@ export class UtilsController {
     @UploadedFile() file: Express.Multer.File,
     @Res() res: Response,
   ): any {
-    const writeImage = createWriteStream(
-      join(__dirname, '..', '../blog-back/public', `${file.originalname}`),
-    );
-    console.log();
-
-    try {
-      writeImage.write(file.buffer);
-      return res.status(HttpStatus.OK).send({
-        url: `http://localhost:${Port}/public/` + `${file.originalname}`,
-        uploaded: true,
-      });
-    } catch (error) {
+    const path = writeFileToPublic('/ckeditor', file);
+    if (path === 'error') {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .send({ uploaded: false, msg: '文件写入错误' });
+    } else {
+
+      return res.status(HttpStatus.OK).send({
+        url: `http://localhost:${Port}/public` + path,
+        uploaded: true,
+      });
     }
   }
+
 }
 // ${getIPAdress()}

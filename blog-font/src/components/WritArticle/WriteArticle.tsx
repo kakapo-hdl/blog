@@ -1,9 +1,5 @@
-import { CardActionArea, CardContent, CircularProgress, TextField, Typography } from "@material-ui/core";
-import React, { useContext, useMemo, useState } from "react";
-import { ListCard } from "./Style";
-// TypeScript users only add this code
-import { BaseEditor, createEditor, Descendant } from 'slate'
-import { Editable, ReactEditor, Slate, withReact } from 'slate-react'
+import { TextField } from "@material-ui/core";
+import React, { useContext, useState } from "react";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { Formik } from 'formik';
@@ -13,9 +9,20 @@ import { useHistory, useParams } from "react-router";
 import { Article, Message } from "../../models/model";
 import Button from '@mui/material/Button';
 import { MyCustomUploadAdapterPlugin } from "./upload";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { IconButton, InputLabel, Link, MenuItem, Select } from "@mui/material";
 import { GrobalContext } from "../../views/IndexPage";
-
+import { PhotoCamera } from "@material-ui/icons";
+import styled from "styled-components";
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import axios from "axios";
+// import ReactZmage from 'react-zmage';
+const Input = styled('input')({
+  display: 'none',
+});
 const ckEditorConfig = {
   language: 'zh-cn',
   toolbar: {
@@ -38,7 +45,7 @@ const ckEditorConfig = {
     //   'imageUpload',
     // ],
     // 工具栏自动换行   
-  
+
     shouldNotGroupWhenFull: true,
   },
   mediaEmbed: {
@@ -50,62 +57,81 @@ const ckEditorConfig = {
 
 
 const WriteArticle = () => {
-  const [article, setArticle] = useState<Article>({ title: '', author: '', content: '', articleTypeId: 0 })
+  const [article, setArticle] = useState<Article>({ title: '', author: '', content: '', articleTypeId: 0, description: '', isCrouselArticle: false })
   const [map, setMap] = React.useState<Array<{ id: number, value: string, color: string }>>();
+  const [image, setImage] = React.useState<File | null>();
+  const [preUrl, setPreUrl] = React.useState<string>('');
+  const showMessage: (mes: Message) => void = useContext(GrobalContext);
 
-  const   showMessage: (mes: Message)=>void =useContext(GrobalContext);
-
-   
   const params: any = useParams();
   const history = useHistory();
   useEffect(() => {
     async function fetchData() {
       showMessage({ message: 'loading data...', type: 'info', isLoading: true });
       const res = await getArticleById(params.key);
-      if (res.status === 200)
-        if (res.data.content === null) {
-          res.data.content = ''
+      if (res.status === 200){
+        const resData: Article = res.data
+        if (resData.content === null) {
+          resData.content = ''
+        }if (resData.imageUrl){
+          setPreUrl(resData.imageUrl)
         }
-      setArticle(res.data);
-      showMessage({ message: 'loading success!', type: 'success', isLoading: false })
+        setArticle(resData);
+        showMessage({ message: 'loading success!', type: 'success', isLoading: false })
+      }
+  
     }
+
     async function fetchMap() {
       const selectMap = await getArticleTypeMap();
       setMap(selectMap.data);
 
     }
-
     fetchMap();
-
     if (params.key === "create") {
     } else {
       fetchData();
     }
 
   }, [])
-
+  const fileHandleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files?.length!==0 && files!== null) {
+      const file = e.target.files![0];
+      setImage(file);
+      const reader = new FileReader();
+      reader.onload = event => {
+        if (typeof event.target!.result === 'string')
+          setPreUrl(event.target!.result)
+      };
+      reader.readAsDataURL(file);
+    }
+  }
   return (
     <>
       <div className="App">
         <Formik
           enableReinitialize
           initialValues={article}
-          onSubmit={async (values, { setSubmitting }) => {
+          onSubmit={async (values: any, { setSubmitting }) => {
+            const formData =  new FormData();
+            Object.keys(values).forEach((key: any) => formData.append(key, values[key]));
+            if (image) {
+              formData.append('image',image!);
+            }
+
             if (values.id) {
               try {
-                showMessage({ message: 'updating...', type: 'info', isLoading: true })
-                await updateArticle(values);
+              showMessage({ message: 'updating...', type: 'info', isLoading: true })
+               await updateArticle(formData);
                 showMessage({ message: 'update success!', type: 'success', isLoading: false })
               } catch (error) {
                 showMessage({ message: 'update fail', type: 'error', isLoading: false })
               }
-
             } else {
               try {
                 showMessage({ message: 'submitting...', type: 'info', isLoading: true });
-                console.log(values);
-
-                const res = await insertArticle(values)
+                const res = await insertArticle(formData)
                 setArticle(res.data.data)
                 showMessage({ message: 'create success!', type: 'success', isLoading: false })
                 history.push(`/writeArticle/${res.data.data.id}`);
@@ -161,7 +187,7 @@ const WriteArticle = () => {
               />
 
 
-              <FormControl style={{ width: '60%' }} >
+              <FormControl size="small" component="fieldset" style={{ width: '60%' }} >
                 <InputLabel id="articleTypeId">article type</InputLabel>
                 <Select
                   labelId="articleTypeId"
@@ -170,17 +196,56 @@ const WriteArticle = () => {
                   value={values.articleTypeId}
                   label="article type"
                   onChange={handleChange}
-                  size="medium"
+                  size="small"
                 >
                   {map?.map(item => <MenuItem key={item.id} style={{ color: item.color }} value={item.id}>{item.value}</MenuItem>)}
                 </Select>
               </FormControl>
+              <br></br>
+              <br></br>
 
+              <TextField
+                fullWidth
+                variant="outlined"
+                id="description"
+                name="description"
+                label="description"
+                value={values.description}
+                onChange={handleChange}
+                minRows={3}
+                size="medium"
+                error={Boolean(errors.title)}
+              />
+              <br></br>
+              <br></br>
+
+              <FormControl component="fieldset" >
+                <FormLabel id="isCrouselArticle" component="legend">As Crousel Article</FormLabel>
+                <RadioGroup
+                  itemType="success"
+                  name="isCrouselArticle" id="isCrouselArticle"
+                  value={values.isCrouselArticle}
+                  onChange={handleChange}
+                  row
+                  Faria-label="gender" >
+                  <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                  <FormControlLabel value={false} control={<Radio />} label="No" />
+                </RadioGroup>
+              </FormControl>
+
+              <label htmlFor="icon-button-file" >
+                <Input accept="image/*" onChange={(e) => { fileHandleChange(e)}} id="icon-button-file" type="file" />
+                <IconButton size='large' color="primary" aria-label="upload picture" component="span">
+                  <PhotoCamera />
+                </IconButton>
+                <Link style={{cursor:'pointer'}} > {image?.name} </Link> 
+              </label>
+              
+              {preUrl ? <img style={{width:100,height:50}} src={preUrl} />  : null}
 
 
               <br></br>
               <br></br>
-
               <CKEditor
                 config={ckEditorConfig}
                 editor={ClassicEditor}
@@ -191,7 +256,6 @@ const WriteArticle = () => {
                   const data = editor.getData();
                   values.content = data
                 }}
-
               />
               <br></br>
 
@@ -201,8 +265,6 @@ const WriteArticle = () => {
             </form>
           )}
         </Formik>
-
-
       </div >
     </>
   )

@@ -1,15 +1,16 @@
 import axios from 'axios'
+import { Article } from '../models/model'
 export const getArticle = async()=>{
   return await axios.get('/api/article/getAll')
 }
 export const insertArticle = async(data: any)=>{
-  return await axios.post('/api/article/insert',data)
+  return await axios.post('/api/article/insert',data,{headers:{'Content-Type': 'multipart/form-data'}})
 }
 export const updateArticle = async(data: any)=>{
-  return await axios.put('/api/article/update',data)
+  return await axios.put('/api/article/update',data,{headers:{'Content-Type': 'multipart/form-data'}} )
 }
-export const getArticleById = async(id: number)=>{
-  return await axios.get('/api/article/get',{params:{id:id}})
+export const getArticleById = async(id: number) =>{
+   return await axios.get('/api/article/get',{params:{id:id}})
 }
 
 export const getArticleType = async()=>{
