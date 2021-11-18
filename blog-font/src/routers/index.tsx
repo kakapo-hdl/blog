@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -12,6 +12,8 @@ const ArticleDisplay = lazy(async () => import('../views/ArticleDisplay'));
 
 const App = () => {
   return (
+    <Suspense fallback={'loadding'}>
+
     <Router>
         <Switch>
           <Route path="/Home" component={HomePage}>
@@ -25,6 +27,7 @@ const App = () => {
           <Redirect from="/" to="/Home" />
         </Switch>
     </Router>
+    </Suspense>
   );
 }
 

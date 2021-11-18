@@ -35,6 +35,7 @@ import { getArticleType, getArticleTypeWithArticle, insertArticleType, updateArt
 import moment from 'moment'
 import { useHistory } from "react-router";
 import RemoveRedEyeSharpIcon from '@mui/icons-material/RemoveRedEyeSharp';
+import { GrobalContext } from "./IndexPage";
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
@@ -97,9 +98,6 @@ const Row: React.FC<({ row: ArticleType, editArticleType: (value: ArticleType) =
   const history = useHistory();
   const { row, editArticleType } = props;
 
-  //   const handlePush = (key?: number) => {  
-  //   history.push(`/WriteArticle/${key}`);
-  //  } 
   const handleClickOpen = () => {
     setOpenConfirm(true);
   };
@@ -237,11 +235,10 @@ const Row: React.FC<({ row: ArticleType, editArticleType: (value: ArticleType) =
 const ManagePage: React.FC<any> = (props) => {
   const [open, setOpen] = React.useState(false);
   const [articleTypes, setArticleTypes] = React.useState<Array<ArticleType>>([]);
-  const [openDlog, setOpenDlog] = React.useState(false);
   const [articleType, setArticleType] = React.useState<ArticleType>({});
-  const [message, setMessage] = React.useState<Message>({ time: 3000, message: '', type: 'info', isLoading: true, key: new Date().getTime().toString() });
   const myFormRef = React.useRef<FormikProps<any>>(null);
   const articleInit: ArticleType = { type: '', color: '', description: '' };
+  const   showMessage: (mes: Message)=>void =React.useContext(GrobalContext);
 
   React.useEffect(() => {
     loadFormData();
@@ -261,14 +258,6 @@ const ManagePage: React.FC<any> = (props) => {
     }
 
   }
-  const showMessage = (mes: Message) => {
-    mes.key = new Date().getTime().toString();
-    setMessage(mes);
-    setOpenDlog(true);
-  }
-  const handleCloseDlog = () => {
-    setOpenDlog(false);
-  };
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -452,20 +441,6 @@ const ManagePage: React.FC<any> = (props) => {
 
 
       </Dialog>
-
-      <Stack spacing={3} sx={{ width: '100%' }}>
-        <Snackbar anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }} open={openDlog} autoHideDuration={message.time === undefined ? 3000 : message.time}
-          key={message ? message.key : undefined}
-          onClose={handleCloseDlog}>
-          <Alert onClose={handleCloseDlog} severity={message?.type} sx={{ width: '100%', minWidth: 300 }}>
-            <span style={{ fontSize: '1rem' }}>{message?.message}</span> {message?.isLoading ? <CircularProgress style={{ float: "right" }} size={20} /> : null}
-          </Alert>
-        </Snackbar>
-
-      </Stack>
     </Container>
 
   );

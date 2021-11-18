@@ -14,6 +14,9 @@ export class Article {
     id?: number,
     articleTypeId?: number,
     title?: string,
+    description?: string,
+    isCrouselArticle?: string,
+    imageUrl?: string,
     author?: string,
     content?: string,
     createTime?: Date,
@@ -24,6 +27,9 @@ export class Article {
     this.title = title;
     this.author = author;
     this.content = content;
+    this.description = description;
+    this.isCrouselArticle = isCrouselArticle;
+    this.imageUrl = imageUrl;
     this.createTime = createTime;
     this.lastUpdateTime = lastUpdateTime;
   }
@@ -41,6 +47,18 @@ export class Article {
   @IsNotEmpty()
   @Column({ nullable: true, type: 'nvarchar' })
   title: string;
+
+  @IsNotEmpty()
+  @Column({ nullable: true, type: 'nvarchar' })
+  description: string;
+
+  @IsNotEmpty()
+  @Column({ nullable: true, type: 'bit', default: false })
+  isCrouselArticle: string;
+
+  @IsNotEmpty()
+  @Column({ nullable: true, type: 'nvarchar', length: 1000 })
+  imageUrl: string;
 
   @IsNotEmpty()
   @Column({ nullable: true, type: 'nvarchar' })

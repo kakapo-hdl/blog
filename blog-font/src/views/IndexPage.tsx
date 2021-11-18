@@ -39,7 +39,7 @@ const IndexPage: React.FC<(IndexPageProps)> = (props) => {
       return;
     }
     setOpen(false);
-    // setMessage({ time: 3000, message: '', type: 'info', isLoading: false, key: new Date().getTime().toString() })
+    // setMessage({ time: 3000, message: '', type: 'success', isLoading: false, key: new Date().getTime().toString() })
   };
   return (
     <>
@@ -47,7 +47,10 @@ const IndexPage: React.FC<(IndexPageProps)> = (props) => {
       <GrobalContext.Provider
         value={showMessage}
       >
+
         <App></App>
+
+  
       </GrobalContext.Provider>
 
       <Stack spacing={3} sx={{ width: '100%' }}>

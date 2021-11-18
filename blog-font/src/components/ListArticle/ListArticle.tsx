@@ -18,9 +18,13 @@ const ListArticle = () => {
 
   useEffect( ()=>{
     async function fetchData() {
-      showMessage({message:'loadding',type:'info'})
+      showMessage({message:'loadding...',type:'info',isLoading:true})
       const response = await getArticle();
-      setArticles(response.data);     
+      if(response.status===200){
+        setArticles(response.data);     
+        showMessage({ message: 'loading success', type: 'success', isLoading: false });
+
+      }
     }
     fetchData();  
   },[])
