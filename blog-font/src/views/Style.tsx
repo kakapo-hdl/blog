@@ -11,3 +11,24 @@ padding:0 20px;
 /* border-bottom: 1px solid; */
 box-shadow: 0 1px 6px 0 rgb(32 33 36 / 28%);
 `
+
+export const Catalogue = styled.a`
+text-decoration: none;
+color: #202020;
+font-weight: 700 ;
+font-size: 1rem;
+box-sizing: border-box;
+border-left: 2px solid #fff;
+text-decoration: none;
+display: inline-flex;
+-webkit-box-align: center;
+align-items: center;
+    /* padding: 0px 8px 0px 10px; */
+margin: 4px 0px 8px;
+box-sizing: border-box;
+:hover{
+  border-left: 2px solid rgb(165, 216, 255);
+  color: #007FFF;
+
+}
+`
