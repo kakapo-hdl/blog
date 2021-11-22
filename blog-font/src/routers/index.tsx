@@ -4,7 +4,7 @@ import {
   Switch,
   Route,
   Redirect
-} from  "react-router-dom";
+} from "react-router-dom";
 const HomePage = lazy(async () => import('../views/HomePage'));
 const WriteArticlePage = lazy(async () => import('../views/WriteArticlePage'));
 const ManagePage = lazy(async () => import('../views/ManagePage'));
@@ -14,19 +14,23 @@ const App = () => {
   return (
     <Suspense fallback={'loadding'}>
 
-    <Router>
-        <Switch>
-          <Route path="/Home" component={HomePage}>
-          </Route>
-          <Route path="/ManagePage" component={ManagePage}>
-          </Route>
-          <Route path="/WriteArticle/:key" component={WriteArticlePage}>
-          </Route>
-          <Route path="/ArticleDisplay/:key" component={ArticleDisplay}>
-          </Route>
-          <Redirect from="/" to="/Home" />
-        </Switch>
-    </Router>
+      <Router>
+        <Suspense fallback={'loadding'}>
+
+          <Switch>
+            <Route path="/Home" component={HomePage}>
+            </Route>
+            <Route path="/ManagePage" component={ManagePage}>
+            </Route>
+            <Route path="/WriteArticle/:key" component={WriteArticlePage}>
+            </Route>
+            <Route path="/ArticleDisplay/:key" component={ArticleDisplay}>
+            </Route>
+            <Redirect from="/" to="/Home" />
+          </Switch>
+        </Suspense>
+
+      </Router>
     </Suspense>
   );
 }

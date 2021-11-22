@@ -8,7 +8,18 @@ html{
 body { background:#F4F5F5; color:#555; font-size:1rem; font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif; }
 
 td,th,caption { font-size:14px; }
+blockquote {
+    overflow: hidden;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
+    margin-left: 0;
+    margin-right: 0;
+    font-style: italic;
+    border-left: 5px solid #ccc;
+}
 
+
+img { border:none; width:100% } 
 /* h1, h2, h3, h4, h5, h6 { font-weight:normal; font-size:100%; } */
 
 /* address, caption, cite, code, dfn, em, strong, th, var { font-style:normal; font-weight:normal;} */
@@ -17,7 +28,7 @@ td,th,caption { font-size:14px; }
 
 a:hover { text-decoration:underline; }
 
-img { border:none; width:100% } */
+
 
 /* ol,ul,li { list-style:none; } */
 

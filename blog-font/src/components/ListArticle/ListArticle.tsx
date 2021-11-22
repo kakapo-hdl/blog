@@ -5,6 +5,7 @@ import { Article, Message } from "../../models/model";
 import { ListCard } from "./ComponentStyle";
 import { useHistory } from 'react-router-dom'
 import { GrobalContext } from "../../views/IndexPage";
+import moment from "moment";
 export interface Props {
   // name?: String;
   // enthusiasmLevel: number;
@@ -32,9 +33,9 @@ const ListArticle = () => {
     <>
     {articles.map((item: Article) =><ListItem 
       key={item.id}
-      title={item.title}
+      description={item.description}
       createTime={item.createTime}
-      content={item.content}  
+      title={item.title}  
       id={item.id}
        ></ListItem>)}
     </>
@@ -53,10 +54,10 @@ const ListItem: React.FC<(Article)> = (props) => {
             {props.title}     
           </Typography>
           <Typography gutterBottom  color='textSecondary' variant="overline" component="div">
-              {props.createTime}
+              {moment(props.createTime).format('YYYY-MM-DD HH:mm')}
             </Typography>
           <Typography variant="body2" color="initial">
-            {props.content}
+            {props.description}
           </Typography>
         </CardContent>
       </CardActionArea>

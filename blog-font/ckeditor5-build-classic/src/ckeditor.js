@@ -330,6 +330,11 @@ ClassicEditor.defaultConfig = {
 	alignment,
 	fontColorConfig,
 	fontBackgroundColorConfig,
+	highlight,
+	// fontSize,
+	fontFamily,
+	image,
+	table,
 	language: 'zh-cn'
 	// This value must be kept in sync with the language defined in webpack.config.js.
 

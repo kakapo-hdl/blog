@@ -29,7 +29,6 @@ export class ArticleController {
 
   @Post('insert')
   @UseInterceptors(FileInterceptor('image'))
-
   async addArticle(
     @UploadedFile() image: Express.Multer.File,
     @Body() article: Article,
@@ -49,7 +48,6 @@ export class ArticleController {
         .send({ mes: 'create error' });
     }
   }
-
 
   @Put('update')
   @UseInterceptors(FileInterceptor('image'))
@@ -72,8 +70,7 @@ export class ArticleController {
     if (typeof article.isCrouselArticle === 'string') {
       if (article.isCrouselArticle === 'true')
         oldArticle.isCrouselArticle = true;
-      else
-        oldArticle.isCrouselArticle = false;
+      else oldArticle.isCrouselArticle = false;
     }
     const result = await this.ArticleService.updateArticle(oldArticle);
     if (result != null) {
@@ -91,6 +88,15 @@ export class ArticleController {
     const data = await this.ArticleService.getArticle();
     return data;
   }
+
+  @Get('getCarouselArticle')
+  async getCarouselArticle(): Promise<Article[]> {
+    const data = await this.ArticleService.getArticle();
+    const res = data.filter((item) => item.isCrouselArticle === true);
+    res.forEach((item) => (item.imageUrl = convertUrl(item.imageUrl)));
+    return res;
+  }
+
   @Get('get')
   async getArticleById(@Query() query: { id: string }): Promise<Article> {
     const data = await this.ArticleService.getArticleById(query.id);

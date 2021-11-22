@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import { MyCustomUploadAdapterPlugin } from "./upload";
 import { IconButton, InputLabel, Link, MenuItem, Select } from "@mui/material";
 import { GrobalContext } from "../../views/IndexPage";
-import { PhotoCamera } from "@material-ui/icons";
+import { CopyrightRounded, CopyrightSharp, PhotoCamera } from "@material-ui/icons";
 import styled from "styled-components";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -27,6 +27,7 @@ const ckEditorConfig = {
   language: 'zh-cn',
   toolbar: {
     // items: [
+      // 'toggleImageCaption', 'imageTextAlternative'
     //   // 标题 加粗 斜体 撤销 重做 超链接 项目符号列表 项目编号列表
     //   'heading',
     //   '|',
@@ -69,17 +70,17 @@ const WriteArticle = () => {
     async function fetchData() {
       showMessage({ message: 'loading data...', type: 'info', isLoading: true });
       const res = await getArticleById(params.key);
-      if (res.status === 200){
+      if (res.status === 200) {
         const resData: Article = res.data
         if (resData.content === null) {
           resData.content = ''
-        }if (resData.imageUrl){
+        } if (resData.imageUrl) {
           setPreUrl(resData.imageUrl)
         }
         setArticle(resData);
         showMessage({ message: 'loading success!', type: 'success', isLoading: false })
       }
-  
+
     }
 
     async function fetchMap() {
@@ -94,9 +95,9 @@ const WriteArticle = () => {
     }
 
   }, [])
-  const fileHandleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const fileHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files?.length!==0 && files!== null) {
+    if (files?.length !== 0 && files !== null) {
       const file = e.target.files![0];
       setImage(file);
       const reader = new FileReader();
@@ -107,6 +108,23 @@ const WriteArticle = () => {
       reader.readAsDataURL(file);
     }
   }
+//   function SelectText()
+// {
+//       try{
+//            
+//             if(selecter!=null&&selecter.trim()!=""){
+//                   alert(selecter);
+//             }
+//       }catch(err){
+//             var selecter=document.selection.createRange();
+//             var s=selecter.text;
+//             if(s!=null&&s.trim()!=""){
+//                   alert(s)
+//             }
+//       }
+// }
+//替换文本前与后的空格
+
   return (
     <>
       <div className="App">
@@ -114,16 +132,16 @@ const WriteArticle = () => {
           enableReinitialize
           initialValues={article}
           onSubmit={async (values: any, { setSubmitting }) => {
-            const formData =  new FormData();
+            const formData = new FormData();
             Object.keys(values).forEach((key: any) => formData.append(key, values[key]));
             if (image) {
-              formData.append('image',image!);
+              formData.append('image', image!);
             }
 
             if (values.id) {
               try {
-              showMessage({ message: 'updating...', type: 'info', isLoading: true })
-               await updateArticle(formData);
+                showMessage({ message: 'updating...', type: 'info', isLoading: true })
+                await updateArticle(formData);
                 showMessage({ message: 'update success!', type: 'success', isLoading: false })
               } catch (error) {
                 showMessage({ message: 'update fail', type: 'error', isLoading: false })
@@ -148,6 +166,7 @@ const WriteArticle = () => {
             values,
             errors,
             touched,
+            setFieldValue,
             handleChange,
             handleBlur,
             handleSubmit,
@@ -205,17 +224,26 @@ const WriteArticle = () => {
               <br></br>
 
               <TextField
-                fullWidth
+                style={{ width: '80%' }}
                 variant="outlined"
                 id="description"
                 name="description"
                 label="description"
                 value={values.description}
                 onChange={handleChange}
+                multiline
                 minRows={3}
                 size="medium"
                 error={Boolean(errors.title)}
               />
+   
+              <IconButton size='large' onClick={async ()=>{
+                let selecter=window.getSelection()?.toString();
+              if(typeof selecter === 'string')
+              setFieldValue('description',selecter.trim())
+              }} color="primary" aria-label="upload picture" component="span">
+                <CopyrightSharp fontSize="medium"  />           复制
+              </IconButton>
               <br></br>
               <br></br>
 
@@ -234,14 +262,14 @@ const WriteArticle = () => {
               </FormControl>
 
               <label htmlFor="icon-button-file" >
-                <Input accept="image/*" onChange={(e) => { fileHandleChange(e)}} id="icon-button-file" type="file" />
+                <Input accept="image/*" onChange={(e) => { fileHandleChange(e) }} id="icon-button-file" type="file" />
                 <IconButton size='large' color="primary" aria-label="upload picture" component="span">
                   <PhotoCamera />
                 </IconButton>
-                <Link style={{cursor:'pointer'}} > {image?.name} </Link> 
+                <Link style={{ cursor: 'pointer' }} > {image?.name} </Link>
               </label>
-              
-              {preUrl ? <img style={{width:100,height:50}} src={preUrl} />  : null}
+
+              {preUrl ? <img style={{ width: 100, height: 50 }} src={preUrl} /> : null}
 
 
               <br></br>

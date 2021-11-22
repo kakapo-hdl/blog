@@ -1,5 +1,8 @@
 import axios from 'axios'
 import { Article } from '../models/model'
+export const getCarouselArticle = async()=>{
+  return await axios.get('/api/article/getCarouselArticle')
+}
 export const getArticle = async()=>{
   return await axios.get('/api/article/getAll')
 }
