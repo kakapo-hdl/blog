@@ -24,7 +24,7 @@ export const writeFileToPublic = (path: string, file: Express.Multer.File): stri
 
     try {
         writeImage.write(file.buffer);
-        return path+`/${file.originalname}`;
+        return path + `/${file.originalname}`;
     } catch (error) {
         return 'error';
     }

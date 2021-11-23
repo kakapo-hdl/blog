@@ -1,8 +1,8 @@
 import { TextField } from "@material-ui/core";
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { Formik } from 'formik';
+import { Formik, FormikProps, useFormik, useFormikContext } from 'formik';
 import { useEffect } from "react";
 import { getArticleById, getArticleTypeMap, insertArticle, updateArticle } from "../../api/service";
 import { useHistory, useParams } from "react-router";
@@ -55,17 +55,32 @@ const ckEditorConfig = {
   extraPlugins: [MyCustomUploadAdapterPlugin],
 };
 
+export const useDebouncedEffect = (effect:any, deps:any, delay:any) => {
+  useEffect(() => {
+      const handler = setTimeout(() => effect(), delay);
 
-
+      return () => clearTimeout(handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...deps || [], delay]);
+}
 const WriteArticle = () => {
   const [article, setArticle] = useState<Article>({ title: '', author: '', content: '', articleTypeId: 0, description: '', isCrouselArticle: false })
   const [map, setMap] = React.useState<Array<{ id: number, value: string, color: string }>>();
   const [image, setImage] = React.useState<File | null>();
   const [preUrl, setPreUrl] = React.useState<string>('');
+  const [value, setValue] = useState()
+  const myFormRef = React.useRef<FormikProps<any>>(null);
+
+  useDebouncedEffect(() =>  myFormRef.current?.submitForm(), [value], 5000);
+
   const showMessage: (mes: Message) => void = useContext(GrobalContext);
 
   const params: any = useParams();
   const history = useHistory();
+
+  // useEffect(()=>{
+    
+  // },[debounceText])
   useEffect(() => {
     async function fetchData() {
       showMessage({ message: 'loading data...', type: 'info', isLoading: true });
@@ -108,6 +123,7 @@ const WriteArticle = () => {
       reader.readAsDataURL(file);
     }
   }
+
 //   function SelectText()
 // {
 //       try{
@@ -129,6 +145,8 @@ const WriteArticle = () => {
     <>
       <div className="App">
         <Formik
+        innerRef={myFormRef}
+
           enableReinitialize
           initialValues={article}
           onSubmit={async (values: any, { setSubmitting }) => {
@@ -282,7 +300,8 @@ const WriteArticle = () => {
                 }}
                 onChange={(event: any, editor: any) => {
                   const data = editor.getData();
-                  values.content = data
+                  values.content = data;                  
+                  setValue(data);
                 }}
               />
               <br></br>
