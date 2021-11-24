@@ -1,11 +1,11 @@
 import { CardActionArea, CardContent, Typography } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
-import { getArticle } from "../../api/service";
+import React from "react";
 import { Article, Message } from "../../models/model";
 import { ListCard } from "./ComponentStyle";
 import { useHistory } from 'react-router-dom'
 import { GrobalContext } from "../../views/IndexPage";
 import moment from "moment";
+import { Card, CardMedia } from "@mui/material";
 export interface Props {
   // name?: String;
   // enthusiasmLevel: number;
@@ -13,54 +13,56 @@ export interface Props {
   // onDecrement?: () => void;
 }
 
-const ListArticle = () => {
-  const [articles,setArticles] = useState<Array<Article>>([])
-  const   showMessage: (mes: Message)=>void =useContext(GrobalContext);
-
-  useEffect( ()=>{
-    async function fetchData() {
-      showMessage({message:'loadding...',type:'info',isLoading:true})
-      const response = await getArticle();
-      if(response.status===200){
-        setArticles(response.data);     
-        showMessage({ message: 'loading success', type: 'success', isLoading: false });
-
-      }
-    }
-    fetchData();  
-  },[])
+const ListArticle: React.FC<({ articles: Article[] })> = (props) => {
+  const { articles } = props;
   return (
     <>
-    {articles.map((item: Article) =><ListItem 
-      key={item.id}
-      description={item.description}
-      createTime={item.createTime}
-      title={item.title}  
-      id={item.id}
-       ></ListItem>)}
+      {articles.map((item: Article) => <ListItem
+        key={item.id}
+        description={item.description}
+        createTime={item.createTime}
+        title={item.title}
+        imageUrl={item.imageUrl}
+        id={item.id}
+      ></ListItem>)}
     </>
   )
 }
-const ListItem: React.FC<(Article)> = (props) => {  
+const ListItem: React.FC<(Article)> = (props) => {
   const history = useHistory();
-  const handleClick = (key?: number) => {  
-  history.push(`/ArticleDisplay/${key}`);
- } 
+  const handleClick = (key?: number) => {
+    history.push(`/ArticleDisplay/${key}`);
+  }
   return (
-    <ListCard onClick={()=>{handleClick(props.id)}} style={{marginBottom:10}}>
+    <ListCard onClick={() => { handleClick(props.id) }} style={{ marginBottom: 10 }}>
+
       <CardActionArea>
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {props.title}     
-          </Typography>
-          <Typography gutterBottom  color='textSecondary' variant="overline" component="div">
+        <Card sx={{ display: 'flex',justifyContent:'space-between' }}>
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {props.title}
+            </Typography>
+            <Typography gutterBottom color='textSecondary' variant="overline" component="div">
               {moment(props.createTime).format('YYYY-MM-DD HH:mm')}
             </Typography>
-          <Typography variant="body2" color="initial">
-            {props.description}
-          </Typography>
-        </CardContent>
+            <Typography variant="body2" color="initial">
+              {props.description}
+            </Typography>
+            {props.imageUrl}
+          </CardContent>
+          <CardMedia
+            component="img"
+            sx={{ width: 200 }}
+            image={props.imageUrl}
+            alt="Live from space album cover"
+          />
+        </Card>
       </CardActionArea>
+
+
+
+
+
     </ListCard>
   )
 

@@ -3,10 +3,11 @@ import {createGlobalStyle} from "styled-components"
 const GlobalStyle = createGlobalStyle`
 /* body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td { margin:0; padding:0; } */
 html{
-  font-size:14px
+  font-size:14px;
+  scroll-behavior: smooth;
+
 }
 body { background:#F4F5F5; color:#555; font-size:1rem; font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif; }
-
 td,th,caption { font-size:14px; }
 blockquote {
     overflow: hidden;
@@ -17,8 +18,6 @@ blockquote {
     font-style: italic;
     border-left: 5px solid #ccc;
 }
-
-
 img { border:none; width:100% } 
 /* h1, h2, h3, h4, h5, h6 { font-weight:normal; font-size:100%; } */
 

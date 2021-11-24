@@ -77,7 +77,7 @@ md, medium: 900px
 lg, large: 1200px
 xl, extra-large: 1536px */}
       <Container fixed maxWidth={'lg'} style={{ height: '100vh', padding: 0 }}>
-        <Grid  container spacing={1}>
+        <Grid container spacing={1}>
           <Grid item xs={12} md={9}>
             <Card style={{ padding: '30px 25px' }}>
               <Typography variant="h4" component={'h4'}> {article.title}</Typography>

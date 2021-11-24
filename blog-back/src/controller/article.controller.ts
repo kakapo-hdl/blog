@@ -90,11 +90,14 @@ export class ArticleController {
   }
 
   @Get('getCarouselArticle')
-  async getCarouselArticle(): Promise<Article[]> {
+  async getCarouselArticle(): Promise<any> {
     const data = await this.ArticleService.getArticle();
-    const res = data.filter((item) => item.isCrouselArticle === true);
-    res.forEach((item) => (item.imageUrl = convertUrl(item.imageUrl)));
-    return res;
+    const map: {key:string,value:Article[]}[] = [];
+    const crouselArticles = data.filter((item) => item.isCrouselArticle === true);
+    crouselArticles.forEach((item) => (item.imageUrl = convertUrl(item.imageUrl)));
+
+
+    return {'CrouselArticles':crouselArticles,'Articles':data};
   }
 
   @Get('get')

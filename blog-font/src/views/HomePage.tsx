@@ -16,16 +16,18 @@ export interface HomePageProps {
 
 const HomePage: React.FC<(HomePageProps)> = (props) => {
   const [imgsUrl,setImgsUrl] = React.useState<string[]>([])
+  const [articles,setArticles] =  React.useState<Article[]>([])
   useEffect(()=>{
     async function fetchData() {
       // You can await here
       const response = await getCarouselArticle();
       if(response.status === 200){
-        const data = response.data as Article[];
+        const {Articles,CrouselArticles} = response.data as {Articles: Article[],CrouselArticles: Article[] } ;
         const urls: string[] = []
-        data.forEach(item=>urls.push(item.imageUrl!))
+        Articles.forEach(item=>urls.push(item.imageUrl!))
         setImgsUrl(urls);
-      
+        setArticles(CrouselArticles);
+
       }
       // ...
     }
@@ -39,7 +41,7 @@ const HomePage: React.FC<(HomePageProps)> = (props) => {
             <div style={{ height: 'calc(50vh)', width: "100%", marginBottom: 10 }}>
               <Carousel switchTime={2000} imageUrl={imgsUrl}></Carousel>
             </div>
-            <ListArticle></ListArticle>
+            <ListArticle articles={articles} ></ListArticle>
           </Grid>
           <Grid item xs={3} md={3}>
 
