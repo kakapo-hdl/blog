@@ -39,7 +39,7 @@ const HomePage: React.FC<(HomePageProps)> = (props) => {
         <Grid container spacing={1}>
           <Grid item xs={9} md={9}>
             <div style={{ height: 'calc(50vh)', width: "100%", marginBottom: 10 }}>
-              <Carousel switchTime={2000} imageUrl={imgsUrl}></Carousel>
+              <Carousel switchTime={4000} imageUrl={imgsUrl}></Carousel>
             </div>
             <ListArticle articles={articles} ></ListArticle>
           </Grid>

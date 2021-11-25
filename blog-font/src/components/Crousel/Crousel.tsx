@@ -17,6 +17,7 @@ const Carousel: React.FC<(CarouselProps)> = (props) => {
   const [time, setTime] = React.useState<string>('0.8');
   const [iconIndex, setIconIndex] = React.useState<number>(0);
   const [elements, setElements] = React.useState<Array<any>>(props.imageUrl)
+  const [clock, setClock] = React.useState<NodeJS.Timeout>();
   // const [elements, setElements] = React.useState<Array<any>>([
   //   'https://t7.baidu.com/it/u=860330160,4117395242&fm=193&f=GIF',
   //   'https://t7.baidu.com/it/u=210325151,3216581750&fm=193&f=GIF',
@@ -39,7 +40,7 @@ const Carousel: React.FC<(CarouselProps)> = (props) => {
   }, [index])
 
   useEffect(() => {
-    let timer: NodeJS.Timeout
+    // let timer: NodeJS.Timeout
     if (elements.length !== 0) {
       lastImg.current.addEventListener('transitionend', function () {
         if (countIndex.current === elements.length) {
@@ -49,47 +50,68 @@ const Carousel: React.FC<(CarouselProps)> = (props) => {
       }
       );
 
-      timer = setInterval(() => {
-        if (countIndex.current === elements.length) {
-          setIndex(0);
-        } else {
-          setIndex((countIndex.current + 1))
-          if (countIndex.current === elements.length - 1) {
-            setIconIndex(0)
-          } else {
-            setIconIndex((countIndex.current + 1))
-          }
-        }
-      }, props.switchTime);
+      addClock();
     }
-
-
-
     return () => {
-      clearInterval(timer);
+      clearInterval(clock!);
     };
   }, [elements]);
   const selectPictrue = (index: number) => {
     setIndex(index)
     setIconIndex((index))
   }
+  const addClock = () => {
+    setClock(setInterval(() => {
+      if (countIndex.current === elements.length) {
+        setIndex(0);
+      } else {
+        setIndex((countIndex.current + 1))
+        if (countIndex.current === elements.length - 1) {
+          setIconIndex(0)
+        } else {
+          setIconIndex((countIndex.current + 1))
+        }
+      }
+    }, props.switchTime))
+  }
 
 
   return (
     <>
-      <CrouSelContain>
+      <CrouSelContain onMouseLeave={() => {
+        if (clock) {
+          addClock()
+        }
+      }} onMouseOver={() => {
+        if (clock) {
+          clearInterval(clock!);
+        }
+
+      }}>
         {elements.map((item, _index) => <CrouSelItem key={_index} transitionTime={time} translat={`-${index * 100}`} leftWidth={`${_index * 100}%`}>
-          <img src={item} />
+          <img src={item} alt="loading" />
         </CrouSelItem>)}
         <CrouSelItem transitionTime={time} ref={lastImg} translat={`-${index * 100}`} leftWidth={`${elements.length * 100}%`}>
-          <img src={elements[0]} />
+          <img src={elements[0]} alt="loading" />
         </CrouSelItem>
         <CrouselIcon>
           {elements.map((item, _index) => <IconButton key={_index} onClick={() => selectPictrue(_index)} style={{ color: '#fff' }}  ><SwapHorizontalCircle style={{ color: `${_index === iconIndex ? ' #fff' : '#6b6767'}` }}></SwapHorizontalCircle></IconButton>)}
         </CrouselIcon>
         <BackShadow></BackShadow>
+        <Button variant="contained" style={{
+          background: '#C51622',
+          color: 'white',
+          position: 'absolute',
+          bottom: '20%',
+          left: '4%',
+          zIndex: 2,
+          borderRadius: '1.5rem',
+          height: '3rem',
+          width: '7rem',
+        }}> 点击阅读</Button>
       </CrouSelContain>
     </>
+
   )
 }
 

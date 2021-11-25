@@ -1,8 +1,8 @@
 import { TextField } from "@material-ui/core";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { Formik, FormikProps, useFormik, useFormikContext } from 'formik';
+import { Formik, FormikProps } from 'formik';
 import { useEffect } from "react";
 import { getArticleById, getArticleTypeMap, insertArticle, updateArticle } from "../../api/service";
 import { useHistory, useParams } from "react-router";
@@ -11,14 +11,13 @@ import Button from '@mui/material/Button';
 import { MyCustomUploadAdapterPlugin } from "./upload";
 import { IconButton, InputLabel, Link, MenuItem, Select } from "@mui/material";
 import { GrobalContext } from "../../views/IndexPage";
-import { CopyrightRounded, CopyrightSharp, PhotoCamera } from "@material-ui/icons";
+import {  CopyrightSharp, PhotoCamera } from "@material-ui/icons";
 import styled from "styled-components";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import axios from "axios";
 // import ReactZmage from 'react-zmage';
 const Input = styled('input')({
   display: 'none',
@@ -48,10 +47,134 @@ const ckEditorConfig = {
     // 工具栏自动换行   
 
     shouldNotGroupWhenFull: true,
+
   },
   mediaEmbed: {
-    previewsInData: true
-  },
+    previewsInData: true,
+		providers: [
+			{
+				name: 'dailymotion',
+				url: /^dailymotion\.com\/video\/(\w+)/,
+				html: (match:any) => {
+					const id = match[1];
+					return (
+						'<div style="position: relative; padding-bottom: 100%; height: 0; ">' +
+						`<iframe src="https://www.dailymotion.com/embed/video/${id}" ` +
+						'style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;" ' +
+						'frameborder="0" width="480" height="270" allowfullscreen allow="autoplay">' +
+						'</iframe>' +
+						'</div>'
+					);
+				}
+			},
+
+			{
+				name: 'spotify',
+				url: [
+					/^open\.spotify\.com\/(artist\/\w+)/,
+					/^open\.spotify\.com\/(album\/\w+)/,
+					/^open\.spotify\.com\/(track\/\w+)/
+				],
+				html: (match:any) => {
+					const id = match[1];
+
+					return (
+						'<div style="position: relative; padding-bottom: 100%; height: 0; padding-bottom: 126%;">' +
+						`<iframe src="https://open.spotify.com/embed/${id}" ` +
+						'style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;" ' +
+						'frameborder="0" allowtransparency="true" allow="encrypted-media">' +
+						'</iframe>' +
+						'</div>'
+					);
+				}
+			},
+
+			{
+				name: 'youtube',
+				url: [
+					/^(?:m\.)?youtube\.com\/watch\?v=([\w-]+)/,
+					/^(?:m\.)?youtube\.com\/v\/([\w-]+)/,
+					/^youtube\.com\/embed\/([\w-]+)/,
+					/^youtu\.be\/([\w-]+)/
+				],
+				html: (match:any) => {
+					const id = match[1];          
+					return (
+						'<div style="position: relative; padding-bottom: 100%; height: 0; padding-bottom: 56.2493%;">' +
+						`<iframe src="https://www.youtube.com/embed/${id}" ` +
+						'style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;" ' +
+						'frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>' +
+						'</iframe>' +
+						'</div>'
+					);
+				}
+			},
+			{
+				name: 'bilibili',
+				url:[
+          /(?<=aid=).*?(?=&)/,
+          /bilibili\.com.*/,
+        ],
+				html: (match:any) => {
+					const id = match[0];     
+               
+					return (
+            '<div style="position: relative; padding-bottom: 100%; height: 0; padding-bottom: 56.2493%;">' +
+						`<iframe src="https://player.bilibili.com/player.html?aid=${id}&page=1&as_wide=1&high_quality=1&danmaku=0" ` +
+						'style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;" ' +
+						'frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>' +
+						'</iframe>' +
+						'</div>'
+					);
+				}
+			},
+
+			{
+				name: 'vimeo',
+				url: [
+					/^vimeo\.com\/(\d+)/,
+					/^vimeo\.com\/[^/]+\/[^/]+\/video\/(\d+)/,
+					/^vimeo\.com\/album\/[^/]+\/video\/(\d+)/,
+					/^vimeo\.com\/channels\/[^/]+\/(\d+)/,
+					/^vimeo\.com\/groups\/[^/]+\/videos\/(\d+)/,
+					/^vimeo\.com\/ondemand\/[^/]+\/(\d+)/,
+					/^player\.vimeo\.com\/video\/(\d+)/
+				],
+				html: (match:any) => {
+					const id = match[1];
+					return (
+						'<div style="position: relative; padding-bottom: 100%; height: 0; padding-bottom: 56.2493%;">' +
+						`<iframe src="https://player.vimeo.com/video/${id}" ` +
+						'style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;" ' +
+						'frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>' +
+						'</iframe>' +
+						'</div>'
+					);
+				}
+			},
+
+			{
+				name: 'instagram',
+				url: /^instagram\.com\/p\/(\w+)/
+			},
+			{
+				name: 'twitter',
+				url: /^twitter\.com/
+			},
+			{
+				name: 'googleMaps',
+				url: /^google\.com\/maps/
+			},
+			{
+				name: 'flickr',
+				url: /^flickr\.com/
+			},
+			{
+				name: 'facebook',
+				url: /^facebook\.com/
+			}
+		]
+	},
   extraPlugins: [MyCustomUploadAdapterPlugin],
 };
 
@@ -123,24 +246,6 @@ const WriteArticle = () => {
       reader.readAsDataURL(file);
     }
   }
-
-//   function SelectText()
-// {
-//       try{
-//            
-//             if(selecter!=null&&selecter.trim()!=""){
-//                   alert(selecter);
-//             }
-//       }catch(err){
-//             var selecter=document.selection.createRange();
-//             var s=selecter.text;
-//             if(s!=null&&s.trim()!=""){
-//                   alert(s)
-//             }
-//       }
-// }
-//替换文本前与后的空格
-
   return (
     <>
       <div className="App">

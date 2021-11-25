@@ -37,7 +37,7 @@ const ListItem: React.FC<(Article)> = (props) => {
     <ListCard onClick={() => { handleClick(props.id) }} style={{ marginBottom: 10 }}>
 
       <CardActionArea>
-        <Card sx={{ display: 'flex',justifyContent:'space-between' }}>
+        <Card sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {props.title}

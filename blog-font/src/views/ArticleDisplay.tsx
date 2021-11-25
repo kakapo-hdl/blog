@@ -95,11 +95,8 @@ xl, extra-large: 1536px */}
               {catalogue}
             </Card>
           </Grid>
-
         </Grid>
       </Container >
-
-
     </>
   )
 }
