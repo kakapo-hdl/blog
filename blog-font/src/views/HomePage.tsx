@@ -38,9 +38,9 @@ const HomePage: React.FC<(HomePageProps)> = (props) => {
       <Container fixed maxWidth={'lg'} style={{ height: '100vh', paddingTop: 10 }}>
         <Grid container spacing={1}>
           <Grid item xs={9} md={9}>
-            <div style={{ height: 'calc(50vh)', width: "100%", marginBottom: 10 }}>
+            {/* <div style={{ height: 'calc(50vh)', width: "100%", marginBottom: 10 }}> */}
               <Carousel switchTime={4000} imageUrl={imgsUrl}></Carousel>
-            </div>
+            {/* </div> */}
             <ListArticle articles={articles} ></ListArticle>
           </Grid>
           <Grid item xs={3} md={3}>
