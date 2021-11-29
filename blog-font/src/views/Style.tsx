@@ -1,3 +1,4 @@
+import { Avatar } from "@mui/material";
 import styled from "styled-components";
 
 export const content = styled.body`
@@ -32,3 +33,27 @@ box-sizing: border-box;
 
 }
 `
+export const MyAvatar = styled(Avatar)`
+  height: 90px;
+  width: 90px;
+  /* transition: transform 2s ease-in-out; */
+  animation-delay:1s;
+  animation:myfirst 10s;
+  animation-direction: reverse;
+
+  animation-iteration-count:infinite;
+  @keyframes myfirst
+{
+  0% {
+    transform: rotateZ(0deg) scale(1);
+    }
+	50% {
+    transform: rotateZ(360deg) scale(1.2);
+    }
+    100% {
+      transform: rotateZ(720deg) scale(1);
+    }
+}
+`
+
+

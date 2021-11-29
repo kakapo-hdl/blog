@@ -15,7 +15,7 @@ export interface CarouselProps {
 
 const Carousel: React.FC<(CarouselProps)> = (props) => {
   const [index, setIndex] = React.useState<number>(0);
-  const [time, setTime] = React.useState<string>('0.8');
+  const [time, setTime] = React.useState<string>('0.5');
   const [iconIndex, setIconIndex] = React.useState<number>(0);
   const [elements, setElements] = React.useState<Array<any>>(props.imageUrl)
   const [clock, setClock] = React.useState<NodeJS.Timeout>();
@@ -38,6 +38,7 @@ const Carousel: React.FC<(CarouselProps)> = (props) => {
     if (countIndex.current === 0 || countIndex.current === 5) {
       setTimeout(() => crouselContain.current!.style.transition = ``, 10)
     }
+
   }, [index])
 
   useEffect(() => {
@@ -63,8 +64,7 @@ const Carousel: React.FC<(CarouselProps)> = (props) => {
   }, [elements]);
   const addClock = () => {
     setClock(setInterval(() => {
-      console.log('定时器');
-      if (index >= elements.length) {
+      if (countIndex.current >= elements.length) {
         setIndex(0);
       } else{
         setIndex((countIndex.current+1))
@@ -148,9 +148,6 @@ const Carousel: React.FC<(CarouselProps)> = (props) => {
       <CrouselIcon>
         {elements.map((item, _index) => <IconButton key={_index} onClick={() => setIndex(_index)} style={{ color: '#fff' }}  ><SwapHorizontalCircle style={{ color: `${_index === index ? ' #fff' : '#6b6767'}` }}></SwapHorizontalCircle></IconButton>)}
       </CrouselIcon>
-      {/* <CrouselIcon>
-        {elements.map((item, _index) => <IconButton key={_index} onClick={() => selectPictrue(_index)} style={{ color: '#fff' }}  ><SwapHorizontalCircle style={{ color: `${_index === iconIndex ? ' #fff' : '#6b6767'}` }}></SwapHorizontalCircle></IconButton>)}
-      </CrouselIcon> */}
     </CrouselContent>
 
   )

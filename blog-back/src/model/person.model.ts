@@ -44,4 +44,5 @@ export class Person {
 
   @Column()
   birthday: Date;
+  
 }
