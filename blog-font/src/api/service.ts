@@ -12,6 +12,14 @@ export const insertArticle = async(data: any)=>{
 export const updateArticle = async(data: any)=>{
   return await axios.put('/api/article/update',data,{headers:{'Content-Type': 'multipart/form-data'}} )
 }
+
+export const updatePersonProfile = async(data: any)=>{
+  return await axios.post('/api/person/update',data,{headers:{'Content-Type': 'multipart/form-data'}})
+}
+
+export const getPerson = async() =>{
+  return await axios.get('/api/person/get')
+}
 export const getArticleById = async(id: number) =>{
    return await axios.get('/api/article/get',{params:{id:id}})
 }

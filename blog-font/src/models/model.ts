@@ -20,6 +20,21 @@ export interface ArticleType {
   lastUpdateTime?: Date,
   articles?: Article[]
 }
+export interface PersonProf {
+  id?: number,
+  nameChi?: string,
+  nameEng?: string,
+  age?: string,
+  email?: string,
+  description?:string,
+  sex?:string,
+  hobit?: string,
+  hobits?: Array<string>,
+  address?: string,
+  birthday?: Date,
+  avaterUrl?:string
+
+}
 
 
 export interface Message {

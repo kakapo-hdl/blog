@@ -17,6 +17,8 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
+import Zmage from 'react-zmage'
+
 import FormLabel from '@mui/material/FormLabel';
 // import ReactZmage from 'react-zmage';
 const Input = styled('input')({
@@ -248,7 +250,7 @@ const WriteArticle = () => {
   }
   return (
     <>
-      <div className="App">
+      {/* <div> */}
         <Formik
         innerRef={myFormRef}
 
@@ -392,7 +394,7 @@ const WriteArticle = () => {
                 <Link style={{ cursor: 'pointer' }} > {image?.name} </Link>
               </label>
 
-              {preUrl ? <img style={{ width: 100, height: 50 }} src={preUrl} /> : null}
+              {preUrl ? <Zmage style={{ width: 100, height: 50 }} src={preUrl} /> : null}
 
 
               <br></br>
@@ -417,7 +419,7 @@ const WriteArticle = () => {
             </form>
           )}
         </Formik>
-      </div >
+      {/* </div > */}
     </>
   )
 }

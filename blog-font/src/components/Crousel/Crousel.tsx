@@ -16,7 +16,6 @@ export interface CarouselProps {
 const Carousel: React.FC<(CarouselProps)> = (props) => {
   const [index, setIndex] = React.useState<number>(0);
   const [time, setTime] = React.useState<string>('0.5');
-  const [iconIndex, setIconIndex] = React.useState<number>(0);
   const [elements, setElements] = React.useState<Array<any>>(props.imageUrl)
   const [clock, setClock] = React.useState<NodeJS.Timeout>();
   const [translat, setTranslat] = React.useState<number>(0);

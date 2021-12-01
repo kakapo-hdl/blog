@@ -6,43 +6,45 @@ export class Person {
     //  id: number,
     nameEng: string,
     nameChi: string,
-    phone: string,
+    hobits: string,
     description: string,
     address: string,
     sex: string,
+    email:string,
     birthday: Date,
+    avaterUrl:string
   ) {
     this.nameChi = nameChi;
     this.nameEng = nameEng;
-    this.phone = phone;
+    this.hobits = hobits;
+    this.sex = sex;
     this.description = description;
     this.address = address;
-    this.sex = sex;
+    this.email = email;
     this.birthday = birthday;
+    this.avaterUrl = avaterUrl;
   }
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
+  @Column({ nullable: true, type: 'nvarchar' })
   nameEng: string;
-
-  @Column()
+  @Column({ nullable: true, type: 'nvarchar' })
   nameChi: string;
-
-  @Column()
-  phone: string;
-
-  @Column()
+  @Column({ nullable: true, type: 'nvarchar' })
   description: string;
-
-  @Column()
+  @Column({ nullable: true, type: 'nvarchar' })
   address: string;
-
-  @Column()
+  @Column({ nullable: true, type: 'nvarchar' })
   sex: string;
-
-  @Column()
+  @Column({ nullable: true, type: 'nvarchar' })
+  email: string;
+  @Column({ nullable: true, type: 'nvarchar' })
+  hobits: string;
+  @Column({ nullable: true, type: 'nvarchar' })
+  avaterUrl: string;
+  @Column({ nullable: true, type: 'datetime' })
   birthday: Date;
-  
+  @Column({ nullable: true, type: 'datetime' })
+  updateTime:Date;
 }

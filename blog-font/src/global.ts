@@ -18,14 +18,31 @@ blockquote {
     font-style: italic;
     border-left: 5px solid #ccc;
 }
-img { border:none; width:100% } 
+.image {
+    display: table;
+    clear: both;
+    text-align: center;
+    margin: .9em auto;
+    min-width: 50px;
+}
+.image-style-side {
+    float: right;
+    margin-left: var(--ck-image-style-spacing);
+    max-width: 50%;
+}
+img { 
+  border:none; width:100%
+}
+
 /* h1, h2, h3, h4, h5, h6 { font-weight:normal; font-size:100%; } */
 
 /* address, caption, cite, code, dfn, em, strong, th, var { font-style:normal; font-weight:normal;} */
 
 /* a { color:#555; text-decoration:none; }
 
-a:hover { text-decoration:underline; }
+a:hover { 
+  text-decoration:underline; 
+}
 
 
 

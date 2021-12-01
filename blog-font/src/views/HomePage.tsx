@@ -1,10 +1,11 @@
 // import { Footer } from "antd/lib/layout/layout";
 import React, { useEffect, useState } from "react";
 import { Container, Grid, Card, Avatar } from "@material-ui/core";
+import Chip from '@mui/material/Chip';
 import Carousel from "../components/Crousel/Crousel";
 import ListArticle from "../components/ListArticle/ListArticle";
-import { getCarouselArticle } from "../api/service";
-import { Article } from "../models/model";
+import { getCarouselArticle, getPerson } from "../api/service";
+import { Article, PersonProf } from "../models/model";
 import { Button, CardActionArea, CardActions, CardContent, CardMedia, Stack, Typography } from "@mui/material";
 import { deepOrange, deepPurple } from '@mui/material/colors';
 import { MyAvatar } from "./Style";
@@ -19,16 +20,23 @@ export interface HomePageProps {
 const HomePage: React.FC<(HomePageProps)> = (props) => {
   const [imgsUrl, setImgsUrl] = React.useState<string[]>([])
   const [articles, setArticles] = React.useState<Article[]>([])
+  const [person, setPerson] = React.useState<PersonProf>({ nameEng: '', age: '', email: '', sex: '', nameChi: '', description: '', hobit: '', });
+
   useEffect(() => {
     async function fetchData() {
-      // You can await here
+      const data = await getPerson();
+      if (data.status === 200) {
+        const personData = data.data as PersonProf;
+        setPerson(personData);
+      }
+
       const response = await getCarouselArticle();
       if (response.status === 200) {
         const { Articles, CrouselArticles } = response.data as { Articles: Article[], CrouselArticles: Article[] };
         const urls: string[] = []
-        Articles.forEach(item => urls.push(item.imageUrl!))
+        CrouselArticles.forEach(item => urls.push(item.imageUrl!))
         setImgsUrl(urls);
-        setArticles(CrouselArticles);
+        setArticles(Articles);
 
       }
       // ...
@@ -57,23 +65,34 @@ const HomePage: React.FC<(HomePageProps)> = (props) => {
                 alignItems="center"
               >
                 <MyAvatar
+                src={person.avaterUrl}
                 >MD</MyAvatar>
                 {/* sx={{ bgcolor: deepOrange[500] }} */}
               </Stack>
 
               <CardContent>
                 <Typography align={'center'} variant='h6' component="div">
-                  黄地雷 &nbsp;  totoro
+                  {person.nameChi} &nbsp;  {person.nameEng}
                 </Typography>
-                <Typography align={'left'} variant='subtitle2' component="div">
-                  Huangzongliang@hotmail.com
+                <Typography style={{marginTop:10}}  align={'left'} variant='subtitle2' component="div">
+                  {person.email}
                 </Typography>
 
-                <Typography variant="subtitle2" color="text.secondary">
-                  爱好：易经，玄学，中医，占卜，风水，道教，游泳
-                </Typography>
-                <Typography variant="subtitle2" color="text.secondary">
-                  {'关于我：一个爱好研究传统文化的人。'}
+                {/* <Typography variant="subtitle2" color="text.secondary"> */}
+                <Stack style={{marginTop:10}}  flexWrap={'wrap'} direction="row" spacing={1}>
+                <label htmlFor="icon-button-file">爱好：</label>
+                {person.hobits ? person.hobits.map((element: string, index: number) => {
+                  return (
+                    <Chip size={'small'} style={{
+                      border: '1px solid rgba(46, 125, 50, 0.7)',
+                      borderRadius:16
+                    }} label={element} color="success" variant="outlined" />
+                  )
+                }) : null}
+              </Stack>
+                {/* </Typography> */}
+                <Typography style={{marginTop:10}} variant="subtitle2" color="text.secondary">
+                  关于我：{person.description}
                 </Typography>
               </CardContent>
             </Card>

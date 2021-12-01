@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PeronMudule } from './person.module';
 import { database } from './config/db';
 import { ArticleMudule } from './article.module';
-import { Person } from './model/person.model';
+import { Person } from './model/Person.model';
 import { Article } from './model/article.model';
 import { UtilsController } from './controller/utils.controller';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -18,12 +18,11 @@ import { ArticleTypeMudule } from './ArticleType.module';
     TypeOrmModule.forRoot({
       type: 'mssql',
       host: '42.192.144.217',
-      // port: 1433,
       username: 'SA',
       password: 'nM7894561230',
       database: 'blog',
-      entities: [Article, Person, ArticleType],
-      // entities: ['src/**.entity{.ts,.js}'],
+      // entities: [Article, Person, ArticleType],
+      // entities: ['src/**.model{.ts,.js}'],
       synchronize: true,
       autoLoadEntities: true,
       extra: {

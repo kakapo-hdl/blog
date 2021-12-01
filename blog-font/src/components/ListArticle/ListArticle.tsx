@@ -48,7 +48,6 @@ const ListItem: React.FC<(Article)> = (props) => {
             <Typography variant="body2" color="initial">
               {props.description}
             </Typography>
-            {props.imageUrl}
           </CardContent>
           <CardMedia
             component="img"

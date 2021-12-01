@@ -28,10 +28,10 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import { Formik, FastField, useFormik, FormikProps } from 'formik';
 import * as yup from 'yup';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import { Alert, Slide, Stack } from "@mui/material";
+import { Alert, Slide, Stack, Switch } from "@mui/material";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
 import { Article, ArticleType, Message } from "../models/model";
-import { getArticleType, getArticleTypeWithArticle, insertArticleType, updateArticleType } from "../api/service";
+import { getArticleType, getArticleTypeWithArticle, insertArticleType, updateArticle, updateArticleType } from "../api/service";
 import moment from 'moment'
 import { useHistory } from "react-router";
 import RemoveRedEyeSharpIcon from '@mui/icons-material/RemoveRedEyeSharp';
@@ -159,6 +159,7 @@ const Row: React.FC<({ row: ArticleType, editArticleType: (value: ArticleType) =
                       <TableCell>Author</TableCell>
                       <TableCell align="center">Create Time</TableCell>
                       <TableCell align="center">LastUpdate Time</TableCell>
+                      <TableCell>Is Carousel</TableCell>
                       <TableCell align="center">Action</TableCell>
 
                     </TableRow>
@@ -175,6 +176,16 @@ const Row: React.FC<({ row: ArticleType, editArticleType: (value: ArticleType) =
                         </TableCell>
                         <TableCell align="center">
                           {moment(row.lastUpdateTime).format('YYYY-MM-DD')}
+                        </TableCell>
+                        <TableCell>
+                          <Switch defaultChecked={row.isCrouselArticle} onChange={async (e) => {
+                            const formData = new FormData();
+                            row.isCrouselArticle = e.target.checked;
+                            const data = row as any;
+                            
+                            Object.keys(data).forEach((key: any) => formData.append(key,data[key]));
+                            updateArticle(formData);
+                          }} color="secondary" />
                         </TableCell>
                         <TableCell align="center" >
                           <IconButton
@@ -238,7 +249,7 @@ const ManagePage: React.FC<any> = (props) => {
   const [articleType, setArticleType] = React.useState<ArticleType>({});
   const myFormRef = React.useRef<FormikProps<any>>(null);
   const articleInit: ArticleType = { type: '', color: '', description: '' };
-  const   showMessage: (mes: Message)=>void =React.useContext(GrobalContext);
+  const showMessage: (mes: Message) => void = React.useContext(GrobalContext);
 
   React.useEffect(() => {
     loadFormData();
@@ -290,10 +301,10 @@ const ManagePage: React.FC<any> = (props) => {
               <TableHead>
                 <StyledTableRow>
                   <StyledTableCell width={20} />
-                  <StyledTableCell style={{ minWidth: 30 }}  align="center">序号</StyledTableCell>
+                  <StyledTableCell style={{ minWidth: 30 }} align="center">序号</StyledTableCell>
                   <StyledTableCell style={{ minWidth: 200 }}>文章类型</StyledTableCell>
-                  <StyledTableCell  style={{ minWidth: 200 }} align="center">描述</StyledTableCell>
-                  <StyledTableCell  style={{ minWidth: 70 }} align="center">类型颜色</StyledTableCell>
+                  <StyledTableCell style={{ minWidth: 200 }} align="center">描述</StyledTableCell>
+                  <StyledTableCell style={{ minWidth: 70 }} align="center">类型颜色</StyledTableCell>
                   <StyledTableCell style={{ minWidth: 70 }} align="center">创建日期</StyledTableCell>
                   <StyledTableCell style={{ minWidth: 70 }} align="center">更新日期</StyledTableCell>
                   <StyledTableCell style={{ minWidth: 70 }} align="center">
@@ -315,9 +326,9 @@ const ManagePage: React.FC<any> = (props) => {
         </Grid>
       </Grid>
 
-      <Button variant="outlined" onClick={handleClickOpen}>
+      {/* <Button variant="outlined" onClick={handleClickOpen}>
         Open max-width dialog
-      </Button>
+      </Button> */}
 
 
       <Dialog
