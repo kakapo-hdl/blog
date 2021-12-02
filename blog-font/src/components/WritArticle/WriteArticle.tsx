@@ -394,7 +394,7 @@ const WriteArticle = () => {
                 <Link style={{ cursor: 'pointer' }} > {image?.name} </Link>
               </label>
 
-              {preUrl ? <Zmage style={{ width: 100, height: 50 }} src={preUrl} /> : null}
+              {preUrl ? <Zmage style={{width:100,height:100}}  src={preUrl} /> : null}
 
 
               <br></br>

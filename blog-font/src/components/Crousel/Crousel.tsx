@@ -30,7 +30,7 @@ const Carousel: React.FC<(CarouselProps)> = (props) => {
     countIndex.current = index;   //让countRef.current永远和count保持一致，避免其他操作改变了count的值 
     // alert(countIndex.current)   
     if (countIndex.current === -1) {
-      setTranslat( 100)
+      setTranslat(100)
     } else {
       setTranslat(-(index * 100))
     }
@@ -65,8 +65,8 @@ const Carousel: React.FC<(CarouselProps)> = (props) => {
     setClock(setInterval(() => {
       if (countIndex.current >= elements.length) {
         setIndex(0);
-      } else{
-        setIndex((countIndex.current+1))
+      } else {
+        setIndex((countIndex.current + 1))
       }
     }, props.switchTime))
   }
@@ -81,23 +81,22 @@ const Carousel: React.FC<(CarouselProps)> = (props) => {
           const startX = e.pageX;
           const initTrans = Number.parseFloat(crouselContain.current!.style.left.replace('%', ''));
           const handleMove = (e: MouseEvent) => {
+
             const width = crouselContain.current?.clientWidth!;
             const des = e.pageX - startX;
             const result = Number.parseFloat((des / width * 100).toFixed(2));
             crouselContain.current!.style.left = `${result + initTrans}%`
           }
           const handleUp = (e: MouseEvent) => {
-            
             const endX = Number.parseFloat(crouselContain.current!.style.left.replace('%', ''));
             crouselContain.current!.style.transition = ``
             const res = endX - initTrans;
             if (res > 0) {
               if (res > 33.33) { setIndex(index - 1) }
-              else { crouselContain.current!.style.left = `${-(index * 100)}%` }
+              else { crouselContain.current!.style.left = `-${(index * 100)}%` }
             } else {
               if (res < -33.33) setIndex(index + 1)
-              else crouselContain.current!.style.left = `${index * 100}%`
-
+              else crouselContain.current!.style.left = `-${index * 100}%`
             }
             window.removeEventListener('mousemove', handleMove)
             window.removeEventListener('mouseup', handleUp)
@@ -145,7 +144,15 @@ const Carousel: React.FC<(CarouselProps)> = (props) => {
 
 
       <CrouselIcon>
-        {elements.map((item, _index) => <IconButton key={_index} onClick={() => setIndex(_index)} style={{ color: '#fff' }}  ><SwapHorizontalCircle style={{ color: `${_index === index ? ' #fff' : '#6b6767'}` }}></SwapHorizontalCircle></IconButton>)}
+        {elements.map((item, _index) => <IconButton key={_index} onClick={() => {
+          if (clock) {
+            clearInterval(clock!);
+          }
+          setIndex(_index);
+          if (clock) {
+            addClock()
+          }
+        }} style={{ color: '#fff' }}  ><SwapHorizontalCircle style={{ color: `${_index === index ? ' #fff' : '#6b6767'}` }}></SwapHorizontalCircle></IconButton>)}
       </CrouselIcon>
     </CrouselContent>
 

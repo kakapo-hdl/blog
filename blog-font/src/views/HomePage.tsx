@@ -6,11 +6,12 @@ import Carousel from "../components/Crousel/Crousel";
 import ListArticle from "../components/ListArticle/ListArticle";
 import { getCarouselArticle, getPerson } from "../api/service";
 import { Article, PersonProf } from "../models/model";
-import { Button, CardActionArea, CardActions, CardContent, CardMedia, Stack, Typography } from "@mui/material";
-import { deepOrange, deepPurple } from '@mui/material/colors';
+import { CardContent, CardMedia, Stack, Typography } from "@mui/material";
 import { MyAvatar } from "./Style";
 
-
+import { useSelector, useDispatch } from 'react-redux'
+// import { increment, decrement, incrementByAmount } from "../reducers/HomeReducers";
+import { RootState } from "../store/Store";
 export interface HomePageProps {
 
 }
@@ -21,6 +22,9 @@ const HomePage: React.FC<(HomePageProps)> = (props) => {
   const [imgsUrl, setImgsUrl] = React.useState<string[]>([])
   const [articles, setArticles] = React.useState<Article[]>([])
   const [person, setPerson] = React.useState<PersonProf>({ nameEng: '', age: '', email: '', sex: '', nameChi: '', description: '', hobit: '', });
+
+  // const count = useSelector((state: RootState) => state.counter.value)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     async function fetchData() {
@@ -45,6 +49,19 @@ const HomePage: React.FC<(HomePageProps)> = (props) => {
   }, [])
   return (
     <>
+      {/* <button
+        aria-label="Increment value"
+        onClick={() => dispatch(increment())}
+      >
+        Increment
+      </button>
+      <span>{count}</span>
+      <button
+        aria-label="Decrement value"
+        onClick={() => dispatch(decrement())}
+      >
+        Decrement
+      </button> */}
       <Container fixed maxWidth={'lg'} style={{ height: '100vh', paddingTop: 10 }}>
         <Grid container spacing={1}>
           <Grid item xs={9} md={9}>
@@ -65,7 +82,7 @@ const HomePage: React.FC<(HomePageProps)> = (props) => {
                 alignItems="center"
               >
                 <MyAvatar
-                src={person.avaterUrl}
+                  src={person.avaterUrl}
                 >MD</MyAvatar>
                 {/* sx={{ bgcolor: deepOrange[500] }} */}
               </Stack>
@@ -74,24 +91,24 @@ const HomePage: React.FC<(HomePageProps)> = (props) => {
                 <Typography align={'center'} variant='h6' component="div">
                   {person.nameChi} &nbsp;  {person.nameEng}
                 </Typography>
-                <Typography style={{marginTop:10}}  align={'left'} variant='subtitle2' component="div">
+                <Typography style={{ marginTop: 10 }} align={'left'} variant='subtitle2' component="div">
                   {person.email}
                 </Typography>
 
                 {/* <Typography variant="subtitle2" color="text.secondary"> */}
-                <Stack style={{marginTop:10}}  flexWrap={'wrap'} direction="row" spacing={1}>
-                <label htmlFor="icon-button-file">爱好：</label>
-                {person.hobits ? person.hobits.map((element: string, index: number) => {
-                  return (
-                    <Chip size={'small'} style={{
-                      border: '1px solid rgba(46, 125, 50, 0.7)',
-                      borderRadius:16
-                    }} label={element} color="success" variant="outlined" />
-                  )
-                }) : null}
-              </Stack>
+                <Stack style={{ marginTop: 10 }} flexWrap={'wrap'} direction="row" spacing={1}>
+                  <label htmlFor="icon-button-file">爱好：</label>
+                  {person.hobits ? person.hobits.map((element: string, index: number) => {
+                    return (
+                      <Chip size={'small'} style={{
+                        border: '1px solid rgba(46, 125, 50, 0.7)',
+                        borderRadius: 16
+                      }} label={element} color="success" variant="outlined" />
+                    )
+                  }) : null}
+                </Stack>
                 {/* </Typography> */}
-                <Typography style={{marginTop:10}} variant="subtitle2" color="text.secondary">
+                <Typography style={{ marginTop: 10 }} variant="subtitle2" color="text.secondary">
                   关于我：{person.description}
                 </Typography>
               </CardContent>
