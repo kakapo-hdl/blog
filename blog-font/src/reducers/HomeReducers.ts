@@ -1,55 +1,41 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Article, PersonProf } from '../models/model'
+import * as api from '../api/service'
 
+export const fetchUserById = createAsyncThunk(
+  'users/fetchByIdStatus',
+  async () => {
+    const resPerson = await api.getPerson()
+    const resArticles = await api.getCarouselArticle();
+    const { Articles, CrouselArticles } = resArticles.data as { Articles: Article[], CrouselArticles: Article[] };
+
+    return {crouselArticle: CrouselArticles,person:resPerson.data,articleList: Articles}
+  }
+)
 export const HOME = 'home'
 export interface HomeState {
   articleList: Article[],
-  crouselArticle: Article[],
-  peron: PersonProf,
+  imageUrl: string[],
+  person: PersonProf,
 }
-export const initialState: HomeState = {
+export const initialHomeState: HomeState = {
   articleList: [],
-  crouselArticle: [],
-  peron: {}
+  imageUrl: [],
+  person: {}
 }
-export const homeSlice = createSlice({name: HOME,initialState,
+export const homeSlice = createSlice({
+  name: HOME,
+  initialState:initialHomeState,
   reducers: {
-    increment: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      // state.+= 1
-    },
   },
+  extraReducers:(builder) =>{
+    builder.addCase(fetchUserById.fulfilled, (state, action) => {
+      const payload =  action.payload as {crouselArticle: Article[],person:PersonProf,articleList: Article[]};  
+      const urls: string[] = []
+      payload.crouselArticle.forEach(item => urls.push(item.imageUrl!))
+      state.person =  payload.person;
+      state.imageUrl =urls;
+      state.articleList = payload.articleList;
+    })  }
 })
-// export interface CounterState {
-//   value: number
-// }
-
-// const initialState: CounterState = {
-//   value: 0,
-// }
-
-// export const counterSlice = createSlice({name: 'counter',initialState,
-// reducers: {
-//     increment: (state) => {
-//       // Redux Toolkit allows us to write "mutating" logic in reducers. It
-//       // doesn't actually mutate the state because it uses the Immer library,
-//       // which detects changes to a "draft state" and produces a brand new
-//       // immutable state based off those changes
-//       state.value += 1
-//     },
-//     decrement: (state) => {
-//       state.value -= 1
-//     },
-//     incrementByAmount: (state, action: PayloadAction<number>) => {
-//       state.value += action.payload
-//     },
-//   },
-// })
-
-// Action creators are generated for each case reducer function
-// export const { increment, decrement, incrementByAmount } = counterSlice.actions
-
-// export default counterSlice.reducer
+export default homeSlice.reducer;

@@ -367,7 +367,8 @@ const WriteArticle = () => {
               if(typeof selecter === 'string')
               setFieldValue('description',selecter.trim())
               }} color="primary" aria-label="upload picture" component="span">
-                <CopyrightSharp fontSize="medium"  />           复制
+                <CopyrightSharp fontSize="medium"  />          
+                 复制
               </IconButton>
               <br></br>
               <br></br>
@@ -394,7 +395,9 @@ const WriteArticle = () => {
                 <Link style={{ cursor: 'pointer' }} > {image?.name} </Link>
               </label>
 
-              {preUrl ? <Zmage style={{width:100,height:100}}  src={preUrl} /> : null}
+              {preUrl ? <Zmage
+              //  style={{width:100,height:100}} 
+                src={preUrl} /> : null}
 
 
               <br></br>
