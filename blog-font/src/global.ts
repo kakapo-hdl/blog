@@ -32,7 +32,7 @@ blockquote {
 }
 img { 
   border:none; 
-  /* width:100% */
+  width:100%
 }
 .imageLayer__207N-{
   -webkit-user-select: none;

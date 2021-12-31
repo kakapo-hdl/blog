@@ -11,6 +11,8 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true, 
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
@@ -21,7 +23,7 @@
     "jsx": "react-jsx",
     "outDir": "./dist",
     "noImplicitAny": true,
-    "typeRoots": [ "./types", "./node_modules/@types" ]
+    "typeRoots": [ "./types", "./node_modules/@types" ],
   },
 
   "include": [
