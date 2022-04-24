@@ -7,7 +7,12 @@ html{
   scroll-behavior: smooth;
 
 }
-body { background:#F4F5F5; color:#555; font-size:1rem; font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif; }
+body {
+  margin:0 !important;
+   background:#F4F5F5; 
+   color:#555; font-size:1rem; 
+   font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif; 
+  }
 td,th,caption { font-size:14px; }
 blockquote {
     overflow: hidden;

@@ -56,4 +56,24 @@ export const MyAvatar = styled(Avatar)`
 }
 `
 
+export const Contanter = styled.div`
+  height:100% ;
+  min-height:100vh ;
+  width:100%;
+`
+export const Header = styled.div`
+  display:flex ;
+  height:70px ;
+  width:100%;
+`
+
+export const MenuLeft = styled.div`
+height:calc(100% - 70px) ;
+width:300px;
+`
+
+export const ContaintRight = styled.div`
+  width:100%;
+`
+
 
