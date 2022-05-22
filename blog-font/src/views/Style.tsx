@@ -57,7 +57,7 @@ export const MyAvatar = styled(Avatar)`
 `
 
 export const Contanter = styled.div`
-  height:100% ;
+  height:100vh;
   min-height:100vh ;
   width:100%;
 `
@@ -67,13 +67,20 @@ export const Header = styled.div`
   width:100%;
 `
 
+export const ContanterMain = styled.div`
+display: flex ;
+height:calc(100% - 70px);
+flex-direction: row;
+`
+
 export const MenuLeft = styled.div`
-height:calc(100% - 70px) ;
+height:100% ;
 width:300px;
 `
 
 export const ContaintRight = styled.div`
   width:100%;
+
 `
 
 

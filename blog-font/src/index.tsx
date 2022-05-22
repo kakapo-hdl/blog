@@ -9,7 +9,7 @@ ReactDOM.render(
     <GlobalStyle></GlobalStyle>
     <Provider store={store}>
     <IndexPage />
-    </Provider>,
+    </Provider>
 
   </>
   ,

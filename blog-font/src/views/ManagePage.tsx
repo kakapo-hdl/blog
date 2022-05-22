@@ -335,7 +335,7 @@ const ManagePage: React.FC<any> = (props) => {
         fullWidth={true}
         maxWidth={'md'}
         open={open}
-        onClose={(e, reson) => handleClose(e, reson)}
+        onClose={(e: any, reson: any) => handleClose(e, reson)}
       >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
           {typeof articleType.id === 'undefined' ? ' Create' : 'Update'}   Article Type

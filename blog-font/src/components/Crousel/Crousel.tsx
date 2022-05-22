@@ -58,8 +58,10 @@ const Carousel: React.FC<(CarouselProps)> = (props) => {
       );
     }
     return () => {
+      
       clearInterval(clock!);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elements]);
   const addClock = () => {
     setClock(setInterval(() => {

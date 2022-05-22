@@ -7,6 +7,9 @@ html{
   scroll-behavior: smooth;
 
 }
+*:focus {
+    outline:none;
+}
 body {
   margin:0 !important;
    background:#F4F5F5; 

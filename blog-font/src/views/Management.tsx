@@ -12,7 +12,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Alert, Divider, MenuItem, Slide, Stack, Switch } from "@mui/material";
 import { TransitionProps } from "@material-ui/core/transitions/transition";
 import { Cloud } from "@material-ui/icons";
-import { ContaintRight, Contanter, Header, MenuLeft } from "./Style";
+import { ContaintRight, Contanter, ContanterMain, Header, MenuLeft } from "./Style";
+import Menu from "../components/Menu";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -40,6 +41,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
 export interface DialogTitleProps {
   id: string;
   children?: React.ReactNode;
@@ -74,48 +76,18 @@ const Management: React.FC<any> = (props) => {
   return (
     <Contanter>
       <Header></Header>
-      <MenuLeft>
-        <Paper sx={{ width: 300, height: '100%', maxWidth: '100%' }}>
-          <MenuList>
-            <MenuItem>
-              <ListItemIcon>
-                {/* <ContentCu fontSize="small" /> */}
-              </ListItemIcon>
-              <ListItemText>Cut</ListItemText>
-              <Typography variant="body2" color="text.secondary">
-                ⌘X
-              </Typography>
-            </MenuItem>
-            <MenuItem>
-              <ListItemIcon>
-                {/* <ContentCopy fontSize="small" /> */}
-              </ListItemIcon>
-              <ListItemText>Copy</ListItemText>
-              <Typography variant="body2" color="text.secondary">
-                ⌘C
-              </Typography>
-            </MenuItem>
-            <MenuItem>
-              <ListItemIcon>
-                {/* <ContentPaste fontSize="small" /> */}
-              </ListItemIcon>
-              <ListItemText>Paste</ListItemText>
-              <Typography variant="body2" color="text.secondary">
-                ⌘V
-              </Typography>
-            </MenuItem>
-            <Divider />
-            <MenuItem>
-              <ListItemIcon>
-                <Cloud fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Web Clipboard</ListItemText>
-            </MenuItem>
-          </MenuList>
-        </Paper>
-      </MenuLeft>
-      <ContaintRight></ContaintRight>
+      <ContanterMain>
 
+        <MenuLeft>
+          <Paper sx={{ width: 300, border:"none", height: '100%', maxWidth: '100%' }}>
+            <Menu></Menu>
+          </Paper>
+        </MenuLeft>
+
+        <ContaintRight>
+          {props.children}
+        </ContaintRight>
+      </ContanterMain>
 
     </Contanter>
 

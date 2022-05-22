@@ -7,8 +7,6 @@ module.exports = function (app) {
     '/api',
     createProxyMiddleware({
       target: 'http://localhost:3300/',
-
-      // target: 'http://192.168.3.3:3300/',
       changeOrigin: true,
       pathRewrite: {
         '^/api': ''
@@ -18,4 +16,3 @@ module.exports = function (app) {
     })
   );
 }
-// export { }
