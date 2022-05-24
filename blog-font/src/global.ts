@@ -42,7 +42,7 @@ img {
   border:none; 
   width:100%
 }
-.imageLayer__207N-{
+/* .imageLayer__207N-{
   -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -103,7 +103,7 @@ img {
     transition: opacity 0.2s;
     will-change: opacity;
     -webkit-tap-highlight-color: transparent;
-}
+} */
 /* h1, h2, h3, h4, h5, h6 { font-weight:normal; font-size:100%; } */
 
 /* address, caption, cite, code, dfn, em, strong, th, var { font-style:normal; font-weight:normal;} */

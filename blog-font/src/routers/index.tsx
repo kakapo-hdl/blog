@@ -33,12 +33,13 @@ const App = () => {
             <Management>
               <Suspense fallback={'loadding'}>
                 <Switch>
-                  <Route path='/Management/ActicleType' component={() => <>sdfdsf</>} />
+                  <Route path='/Management/ActicleType' component={ManagePage} />
+                  
                   <Route path="/Management/ActicleManagement" component={PersonPage}>
                   </Route>
                   <Route path="/Management/Profile" component={PersonPage}>
                   </Route>
-                  <Route path="/Management/Account" component={PersonPage}>
+                  <Route path="/Management/Account" component={() => <>Account</>}>
                   </Route>
                 </Switch>
               </Suspense>

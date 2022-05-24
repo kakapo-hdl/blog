@@ -80,20 +80,6 @@ const PersonPage: React.FC<(PersonPageProps)> = (props) => {
           } catch (error) {
             showMessage({ message: 'update fail', type: 'error', isLoading: false })
           }
-          // if (values.id) {
-
-          // } else {
-          //   try {
-          //     showMessage({ message: 'submitting...', type: 'info', isLoading: true });
-          //     const res = await insertArticle(formData)
-          //     setArticle(res.data.data)
-          //     showMessage({ message: 'create success!', type: 'success', isLoading: false })
-          //     history.push(`/writeArticle/${res.data.data.id}`);
-          //   }
-          //   catch (error) {
-          //     showMessage({ message: 'create fail!', type: 'error', isLoading: false })
-          //   }
-          // }
         }
         }
 
@@ -110,7 +96,7 @@ const PersonPage: React.FC<(PersonPageProps)> = (props) => {
         }) => (
           <form onSubmit={handleSubmit}>
 
-            <FormLabel htmlFor="icon-button-file" >
+           <FormLabel htmlFor="icon-button-file" >
               <Input accept="image/*" onChange={(e) => { fileHandleChange(e) }} id="icon-button-file" type="file" />
               <Avatar
                 src={preUrl}
@@ -140,6 +126,7 @@ const PersonPage: React.FC<(PersonPageProps)> = (props) => {
               size="medium"
               error={Boolean(errors.title)}
             />
+        
             <br /><br />
 
             <TextField
@@ -154,7 +141,7 @@ const PersonPage: React.FC<(PersonPageProps)> = (props) => {
               error={Boolean(errors.author)}
             />
 
-            <FormControl style={{ width: '48%', marginRight: '2%' }}
+           {/* <FormControl style={{ width: '48%', marginRight: '2%' }}
               component="fieldset" >
               <FormLabel id="isCrouselArticle" component="legend">Sex:</FormLabel>
               <RadioGroup
@@ -167,15 +154,11 @@ const PersonPage: React.FC<(PersonPageProps)> = (props) => {
                 <FormControlLabel value={"Male"} control={<Radio />} label="Male" />
                 <FormControlLabel value={"Female"} control={<Radio />} label="Female" />
               </RadioGroup>
-            </FormControl>
+            </FormControl> */}
             <br /><br />
 
-
+       
             <Typography component={'div'}>
-              {/* <Stack direction="row" spacing={1}>
-                <Chip label="Chip Filled" />
-                <Chip label="Chip Outlined" variant="outlined" />
-              </Stack> */}
               <Stack direction="row" spacing={1}>
                 <label htmlFor="icon-button-file">Hobit:</label>
                 {values.hobits ? values.hobits.map((element: string, index: number) => {
@@ -188,8 +171,9 @@ const PersonPage: React.FC<(PersonPageProps)> = (props) => {
                 }) : null}
               </Stack>
 
-            </Typography>
+            </Typography> 
             <br />
+
             <TextField
               style={{ width: '44%' }}
               variant="outlined"
@@ -200,8 +184,10 @@ const PersonPage: React.FC<(PersonPageProps)> = (props) => {
               size="medium"
               error={Boolean(errors.author)}
             />
+
+    
             <Typography style={{ width: '8%', display: 'inline-flex' }} component={'div'}>
-              <IconButton
+            <Button
                 onClick={()=>{
                   if(values.hobit){
                     setFieldValue('hobits',values.hobits.concat(values.hobit))
@@ -209,10 +195,12 @@ const PersonPage: React.FC<(PersonPageProps)> = (props) => {
                   }
              
               } }
-                color="primary" aria-label="upload picture" component="span">
+                color="primary"   >
                 <NetworkLockedRounded />
-              </IconButton>
-            </Typography>
+              </Button> 
+  
+            </Typography> 
+  
             <br /><br />
 
 
